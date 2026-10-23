@@ -81,6 +81,10 @@ internal interface SimpleCoreListener : CoreListener {
 
     override fun onMessageReceived(lc: Core, room: ChatRoom, message: ChatMessage) {}
 
+    override fun onMessageContentEdited(core: Core, room: ChatRoom, message: ChatMessage) {}
+
+    override fun onMessageRetracted(core: Core, room: ChatRoom, message: ChatMessage) {}
+
     override fun onBuddyInfoUpdated(lc: Core, lf: Friend) {}
 
     override fun onTransferStateChanged(lc: Core, transfered: Call, newCallState: Call.State) {}

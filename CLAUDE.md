@@ -205,7 +205,7 @@ example/                                # Demo app
 - `freezed_annotation ^3.1.0` / `freezed ^3.2.3` - Immutable data classes
 
 **Native dependencies (of the vendored VoIP code):**
-- Android: `org.linphone.minimal:linphone-sdk-android` 5.4.94, `io.insert-koin:koin-android` 2.2.2
+- Android: `org.linphone.minimal:linphone-sdk-android` 5.5.35, `io.insert-koin:koin-android` 2.2.2
 - iOS: `linphone-sdk-swift-ios` 5.4.24 (from gitlab.linphone.org), `Swinject` 2.9.2 (JohannesNevels fork)
 
 ## Important Notes

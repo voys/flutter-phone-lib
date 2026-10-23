@@ -1,4 +1,9 @@
 # Changelog
+
+## [Unreleased]
+
+- Upgraded the Android Linphone SDK from 5.4.94 to 5.5.35 to include upstream AAudio sound-card race and player lifecycle crash fixes.
+
 ## [1.0.4] - 2026-10-05
 
 - Fixed a bug on iOS where the speaker button briefly showed as off after unholding a call that was on speaker. The audio state now keeps reporting the speaker while the call is on hold.
