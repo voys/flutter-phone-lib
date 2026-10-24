@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.6] - 2026-10-24
+
+- Resolve the iOS Linphone SDK package from the official GitHub mirror instead of gitlab.linphone.org
+
 ## [1.0.5] - 2026-10-23
 
 - Upgraded the Android Linphone SDK from 5.4.94 to 5.5.35 to include upstream AAudio sound-card race and player lifecycle crash fixes.

@@ -14,8 +14,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/JohannesNevels/Swinject.git", exact: "2.9.2"),
-        .package(url: "https://gitlab.linphone.org/BC/public/linphone-sdk-swift-ios.git", exact: "5.4.24"),
+        .package(url: "https://github.com/Swinject/Swinject.git", exact: "2.10.0"),
+        .package(url: "https://github.com/BelledonneCommunications/linphone-sdk-swift-ios.git", exact: "5.4.24"),
     ],
     targets: [
         .target(
