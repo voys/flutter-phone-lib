@@ -206,7 +206,7 @@ example/                                # Demo app
 
 **Native dependencies (of the vendored VoIP code):**
 - Android: `org.linphone.minimal:linphone-sdk-android` 5.5.35, `io.insert-koin:koin-android` 2.2.2
-- iOS: `linphone-sdk-swift-ios` 5.4.24 (from gitlab.linphone.org), `Swinject` 2.9.2 (JohannesNevels fork)
+- iOS: `linphone-sdk-swift-ios` 5.4.24 (from the official GitHub mirror; gitlab.linphone.org is frequently unreachable), `Swinject` 2.10.0
 
 ## Important Notes
 
