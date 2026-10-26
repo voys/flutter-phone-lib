@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.7] - 2026-10-26
+
+- The plugin no longer adds the `https://download.flutter.io` Maven repository to every project in the app's Android build. Builds failed when that host served a mismatched TLS certificate, and the Flutter Gradle plugin already provides the engine repository.
+
 ## [1.0.6] - 2026-10-24
 
 - Resolve the iOS Linphone SDK package from the official GitHub mirror instead of gitlab.linphone.org

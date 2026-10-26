@@ -19,7 +19,6 @@ rootProject.allprojects {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
-        maven { url 'https://download.flutter.io' }
         maven { url 'https://download.linphone.org/maven_repository/' }
     }
 }
