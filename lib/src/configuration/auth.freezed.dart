@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'auth.dart';
@@ -9,6 +9,7 @@ part of 'auth.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $AuthCopyWith<Auth> get copyWith => _$AuthCopyWithImpl<Auth>(this as Auth, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Auth&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.domain, domain) || other.domain == domain)&&(identical(other.port, port) || other.port == port)&&(identical(other.secure, secure) || other.secure == secure));
+  final _this = this as Auth;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Auth&&(identical(other.username, _this.username) || other.username == _this.username)&&(identical(other.password, _this.password) || other.password == _this.password)&&(identical(other.domain, _this.domain) || other.domain == _this.domain)&&(identical(other.port, _this.port) || other.port == _this.port)&&(identical(other.secure, _this.secure) || other.secure == _this.secure));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,username,password,domain,port,secure);
+int get hashCode {
+  final _this = this as Auth;
+  return Object.hash(runtimeType,_this.username,_this.password,_this.domain,_this.port,_this.secure);
+}
 
 @override
 String toString() {
-  return 'Auth(username: $username, password: $password, domain: $domain, port: $port, secure: $secure)';
+  final _this = this as Auth;
+  return 'Auth(username: ${_this.username}, password: ${_this.password}, domain: ${_this.domain}, port: ${_this.port}, secure: ${_this.secure})';
 }
 
 
@@ -66,7 +72,7 @@ class _$AuthCopyWithImpl<$Res>
 /// Create a copy of Auth
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? username = null,Object? password = null,Object? domain = null,Object? port = null,Object? secure = null,}) {
-  return _then(_self.copyWith(
+  return _then(Auth(
 username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String,domain: null == domain ? _self.domain : domain // ignore: cast_nullable_to_non_nullable
@@ -229,16 +235,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Auth&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.domain, domain) || other.domain == domain)&&(identical(other.port, port) || other.port == port)&&(identical(other.secure, secure) || other.secure == secure));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Auth&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.domain, domain) || other.domain == domain)&&(identical(other.port, port) || other.port == port)&&(identical(other.secure, secure) || other.secure == secure));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,username,password,domain,port,secure);
+int get hashCode {
+    return Object.hash(runtimeType,username,password,domain,port,secure);
+}
 
 @override
 String toString() {
-  return 'Auth(username: $username, password: $password, domain: $domain, port: $port, secure: $secure)';
+    return 'Auth(username: $username, password: $password, domain: $domain, port: $port, secure: $secure)';
 }
 
 

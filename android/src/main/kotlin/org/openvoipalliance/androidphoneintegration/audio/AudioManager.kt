@@ -62,7 +62,8 @@ class AudioManager internal constructor(
         } else {
             calls.forEach {
                 it.linphoneCall.isEchoLimiterEnabled = false
-                it.linphoneCall.isEchoCancellationEnabled = true
+                // Defer to the core, which disables software AEC on devices with a built-in one.
+                it.linphoneCall.isEchoCancellationEnabled = it.linphoneCall.core.isEchoCancellationEnabled
             }
         }
 
