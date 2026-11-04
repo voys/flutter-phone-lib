@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'call.dart';
@@ -9,6 +9,7 @@ part of 'call.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $CallCopyWith<Call> get copyWith => _$CallCopyWithImpl<Call>(this as Call, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Call&&(identical(other.remoteNumber, remoteNumber) || other.remoteNumber == remoteNumber)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.state, state) || other.state == state)&&(identical(other.direction, direction) || other.direction == direction)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.isOnHold, isOnHold) || other.isOnHold == isOnHold)&&(identical(other.uuid, uuid) || other.uuid == uuid)&&(identical(other.mos, mos) || other.mos == mos)&&(identical(other.currentMos, currentMos) || other.currentMos == currentMos)&&(identical(other.contact, contact) || other.contact == contact)&&(identical(other.remotePartyHeading, remotePartyHeading) || other.remotePartyHeading == remotePartyHeading)&&(identical(other.remotePartySubheading, remotePartySubheading) || other.remotePartySubheading == remotePartySubheading)&&(identical(other.prettyDuration, prettyDuration) || other.prettyDuration == prettyDuration)&&(identical(other.callId, callId) || other.callId == callId)&&(identical(other.reason, reason) || other.reason == reason));
+  final _this = this as Call;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Call&&(identical(other.remoteNumber, _this.remoteNumber) || other.remoteNumber == _this.remoteNumber)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.state, _this.state) || other.state == _this.state)&&(identical(other.direction, _this.direction) || other.direction == _this.direction)&&(identical(other.duration, _this.duration) || other.duration == _this.duration)&&(identical(other.isOnHold, _this.isOnHold) || other.isOnHold == _this.isOnHold)&&(identical(other.uuid, _this.uuid) || other.uuid == _this.uuid)&&(identical(other.mos, _this.mos) || other.mos == _this.mos)&&(identical(other.currentMos, _this.currentMos) || other.currentMos == _this.currentMos)&&(identical(other.contact, _this.contact) || other.contact == _this.contact)&&(identical(other.remotePartyHeading, _this.remotePartyHeading) || other.remotePartyHeading == _this.remotePartyHeading)&&(identical(other.remotePartySubheading, _this.remotePartySubheading) || other.remotePartySubheading == _this.remotePartySubheading)&&(identical(other.prettyDuration, _this.prettyDuration) || other.prettyDuration == _this.prettyDuration)&&(identical(other.callId, _this.callId) || other.callId == _this.callId)&&(identical(other.reason, _this.reason) || other.reason == _this.reason));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,remoteNumber,displayName,state,direction,duration,isOnHold,uuid,mos,currentMos,contact,remotePartyHeading,remotePartySubheading,prettyDuration,callId,reason);
+int get hashCode {
+  final _this = this as Call;
+  return Object.hash(runtimeType,_this.remoteNumber,_this.displayName,_this.state,_this.direction,_this.duration,_this.isOnHold,_this.uuid,_this.mos,_this.currentMos,_this.contact,_this.remotePartyHeading,_this.remotePartySubheading,_this.prettyDuration,_this.callId,_this.reason);
+}
 
 @override
 String toString() {
-  return 'Call(remoteNumber: $remoteNumber, displayName: $displayName, state: $state, direction: $direction, duration: $duration, isOnHold: $isOnHold, uuid: $uuid, mos: $mos, currentMos: $currentMos, contact: $contact, remotePartyHeading: $remotePartyHeading, remotePartySubheading: $remotePartySubheading, prettyDuration: $prettyDuration, callId: $callId, reason: $reason)';
+  final _this = this as Call;
+  return 'Call(remoteNumber: ${_this.remoteNumber}, displayName: ${_this.displayName}, state: ${_this.state}, direction: ${_this.direction}, duration: ${_this.duration}, isOnHold: ${_this.isOnHold}, uuid: ${_this.uuid}, mos: ${_this.mos}, currentMos: ${_this.currentMos}, contact: ${_this.contact}, remotePartyHeading: ${_this.remotePartyHeading}, remotePartySubheading: ${_this.remotePartySubheading}, prettyDuration: ${_this.prettyDuration}, callId: ${_this.callId}, reason: ${_this.reason})';
 }
 
 
@@ -66,7 +72,7 @@ class _$CallCopyWithImpl<$Res>
 /// Create a copy of Call
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? remoteNumber = null,Object? displayName = null,Object? state = null,Object? direction = null,Object? duration = null,Object? isOnHold = null,Object? uuid = null,Object? mos = null,Object? currentMos = null,Object? contact = freezed,Object? remotePartyHeading = null,Object? remotePartySubheading = null,Object? prettyDuration = null,Object? callId = null,Object? reason = null,}) {
-  return _then(_self.copyWith(
+  return _then(Call(
 remoteNumber: null == remoteNumber ? _self.remoteNumber : remoteNumber // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String,state: null == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
@@ -249,16 +255,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Call&&(identical(other.remoteNumber, remoteNumber) || other.remoteNumber == remoteNumber)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.state, state) || other.state == state)&&(identical(other.direction, direction) || other.direction == direction)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.isOnHold, isOnHold) || other.isOnHold == isOnHold)&&(identical(other.uuid, uuid) || other.uuid == uuid)&&(identical(other.mos, mos) || other.mos == mos)&&(identical(other.currentMos, currentMos) || other.currentMos == currentMos)&&(identical(other.contact, contact) || other.contact == contact)&&(identical(other.remotePartyHeading, remotePartyHeading) || other.remotePartyHeading == remotePartyHeading)&&(identical(other.remotePartySubheading, remotePartySubheading) || other.remotePartySubheading == remotePartySubheading)&&(identical(other.prettyDuration, prettyDuration) || other.prettyDuration == prettyDuration)&&(identical(other.callId, callId) || other.callId == callId)&&(identical(other.reason, reason) || other.reason == reason));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Call&&(identical(other.remoteNumber, remoteNumber) || other.remoteNumber == remoteNumber)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.state, state) || other.state == state)&&(identical(other.direction, direction) || other.direction == direction)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.isOnHold, isOnHold) || other.isOnHold == isOnHold)&&(identical(other.uuid, uuid) || other.uuid == uuid)&&(identical(other.mos, mos) || other.mos == mos)&&(identical(other.currentMos, currentMos) || other.currentMos == currentMos)&&(identical(other.contact, contact) || other.contact == contact)&&(identical(other.remotePartyHeading, remotePartyHeading) || other.remotePartyHeading == remotePartyHeading)&&(identical(other.remotePartySubheading, remotePartySubheading) || other.remotePartySubheading == remotePartySubheading)&&(identical(other.prettyDuration, prettyDuration) || other.prettyDuration == prettyDuration)&&(identical(other.callId, callId) || other.callId == callId)&&(identical(other.reason, reason) || other.reason == reason));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,remoteNumber,displayName,state,direction,duration,isOnHold,uuid,mos,currentMos,contact,remotePartyHeading,remotePartySubheading,prettyDuration,callId,reason);
+int get hashCode {
+    return Object.hash(runtimeType,remoteNumber,displayName,state,direction,duration,isOnHold,uuid,mos,currentMos,contact,remotePartyHeading,remotePartySubheading,prettyDuration,callId,reason);
+}
 
 @override
 String toString() {
-  return 'Call(remoteNumber: $remoteNumber, displayName: $displayName, state: $state, direction: $direction, duration: $duration, isOnHold: $isOnHold, uuid: $uuid, mos: $mos, currentMos: $currentMos, contact: $contact, remotePartyHeading: $remotePartyHeading, remotePartySubheading: $remotePartySubheading, prettyDuration: $prettyDuration, callId: $callId, reason: $reason)';
+    return 'Call(remoteNumber: $remoteNumber, displayName: $displayName, state: $state, direction: $direction, duration: $duration, isOnHold: $isOnHold, uuid: $uuid, mos: $mos, currentMos: $currentMos, contact: $contact, remotePartyHeading: $remotePartyHeading, remotePartySubheading: $remotePartySubheading, prettyDuration: $prettyDuration, callId: $callId, reason: $reason)';
 }
 
 

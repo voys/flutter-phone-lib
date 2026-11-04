@@ -200,9 +200,9 @@ example/                                # Demo app
 ## Dependencies
 
 **Key Dart packages:**
-- `equatable ^2.0.5` - Value equality
-- `json_annotation ^4.8.1` / `json_serializable ^6.7.1` - JSON serialization
-- `freezed_annotation ^3.1.0` / `freezed ^3.2.3` - Immutable data classes
+- `equatable ^3.0.0` - Value equality
+- `json_annotation ^4.12.0` / `json_serializable ^6.15.2` (dev) - JSON serialization
+- `freezed_annotation ^3.1.0` / `freezed ^4.0.3` (dev) - Immutable data classes
 
 **Native dependencies (of the vendored VoIP code):**
 - Android: `org.linphone.minimal:linphone-sdk-android` 5.5.35, `io.insert-koin:koin-android` 2.2.2

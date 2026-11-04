@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.8] - 2026-11-04
+
+- Requires Flutter 3.47.0 or later (Dart 3.13 or later).
+- Requires `equatable` 3. Apps still on `equatable` 2 must upgrade.
+- `freezed` and `json_serializable` are now dev dependencies, so they are no longer pulled into apps that use this plugin.
+- The example app uses the iOS UIScene lifecycle and the Gradle, AGP and Kotlin versions that Flutter 3.47 requires.
+- Fixed a bug on Android where switching the audio route away from the speaker turned on software echo cancellation, even on devices with built-in echo cancellation. Both then ran at the same time, which can make the audio sound distorted or crackly.
+
 ## [1.0.7] - 2026-10-26
 
 - The plugin no longer adds the `https://download.flutter.io` Maven repository to every project in the app's Android build. Builds failed when that host served a mismatched TLS certificate, and the Flutter Gradle plugin already provides the engine repository.
