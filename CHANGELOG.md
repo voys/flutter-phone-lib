@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.9] - 2026-11-06
+
+- Migrated the Android plugin to Flutter's built-in Kotlin. It no longer applies the Kotlin Gradle Plugin (KGP), so apps no longer get the warning that future Flutter versions will fail to build with it. Apps that keep `android.builtInKotlin=false` still build: Flutter applies KGP to the plugin, as long as the app declares KGP in its root `plugins {}` block.
+- The Android plugin now compiles against SDK 36 (was 33). AGP 9 builds failed with SDK 33 because the androidx libraries that come with Flutter need SDK 34 or later. `minSdk` stays at 26.
+- The example app uses AGP 9.1.0, Gradle 9.3.1 and built-in Kotlin, and its dependencies are upgraded.
+
 ## [1.0.8] - 2026-11-04
 
 - Requires Flutter 3.47.0 or later (Dart 3.13 or later).
