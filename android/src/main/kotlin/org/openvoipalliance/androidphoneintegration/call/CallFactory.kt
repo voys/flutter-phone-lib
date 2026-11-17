@@ -49,15 +49,15 @@ internal class CallFactory(private val contacts: Contacts) {
     }
 
     private fun convertCallState(state: CallState): org.openvoipalliance.androidphoneintegration.call.CallState = when (state) {
-        Idle, IncomingReceived, OutgoingInit -> org.openvoipalliance.androidphoneintegration.call.CallState.INITIALIZING
-        OutgoingProgress, OutgoingRinging -> org.openvoipalliance.androidphoneintegration.call.CallState.RINGING
+        Idle, OutgoingInit -> org.openvoipalliance.androidphoneintegration.call.CallState.INITIALIZING
+        IncomingReceived, PushIncomingReceived, OutgoingProgress, OutgoingRinging -> org.openvoipalliance.androidphoneintegration.call.CallState.RINGING
         Pausing, Paused -> org.openvoipalliance.androidphoneintegration.call.CallState.HELD_BY_LOCAL
         PausedByRemote -> org.openvoipalliance.androidphoneintegration.call.CallState.HELD_BY_REMOTE
-        OutgoingEarlyMedia, Connected, StreamsRunning, Referred, CallUpdatedByRemote, CallIncomingEarlyMedia,
-        CallUpdating, CallEarlyUpdatedByRemote, CallEarlyUpdating, Resuming,
+        OutgoingEarlyMedia, Connected, StreamsRunning, Referred, UpdatedByRemote, IncomingEarlyMedia,
+        Updating, EarlyUpdatedByRemote, EarlyUpdating, Resuming,
         -> org.openvoipalliance.androidphoneintegration.call.CallState.CONNECTED
         Error, Unknown -> org.openvoipalliance.androidphoneintegration.call.CallState.ERROR
-        CallEnd, CallReleased -> org.openvoipalliance.androidphoneintegration.call.CallState.ENDED
+        End, Released -> org.openvoipalliance.androidphoneintegration.call.CallState.ENDED
     }
 
     private fun extractCallerInformationFromAlternativeHeaders(header: String): RemotePartyInformation? {
