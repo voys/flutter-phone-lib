@@ -108,7 +108,12 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedTab,
-        onDestinationSelected: (index) => setState(() => _selectedTab = index),
+        onDestinationSelected: (index) {
+          setState(() => _selectedTab = index);
+
+          final voipgrid = Phone.instance.voipgrid;
+          if (index == 1 && voipgrid.isLoggedIn) voipgrid.fetchUser();
+        },
         destinations: const [
           NavigationDestination(icon: Icon(Icons.dialpad), label: 'Dialer'),
           NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
