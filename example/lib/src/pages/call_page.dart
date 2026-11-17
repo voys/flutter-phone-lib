@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_phone_lib/flutter_phone_lib.dart';
 
 import '../phone.dart';
+import '../widgets/call_button.dart';
+import '../widgets/caller_header.dart';
 import '../widgets/keypad.dart';
 
 class CallPage extends StatefulWidget {
@@ -17,7 +19,6 @@ class _CallPageState extends State<CallPage> {
   final _phone = Phone.instance;
 
   CallSessionState? _sessionState;
-  String? _eventStatus;
 
   StreamSubscription<Event>? _eventsSubscription;
 
@@ -47,54 +48,82 @@ class _CallPageState extends State<CallPage> {
       setState(() => _sessionState = event.state);
     }
 
-    final status = switch (event) {
-      CallConnected() => 'Call connected',
-      AttendedTransferStarted() => 'Transfer started',
-      AttendedTransferConnected() => 'Transfer connected',
-      AttendedTransferAborted() => 'Transfer aborted',
+    final message = switch (event) {
+      AttendedTransferAborted() => 'Transfer cancelled',
+      AttendedTransferEnded() => 'Call transferred',
       _ => null,
     };
 
-    if (status != null) {
-      setState(() => _eventStatus = status);
-    }
-
-    if (event is AttendedTransferEnded) {
+    if (message != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Call transfer complete!')),
+        SnackBar(content: Text(message)),
       );
     }
   }
 
-  Future<void> _routeAudioToBluetooth() async {
-    final bluetoothRoutes = _audioState?.bluetoothRoutes.toList() ?? [];
+  Future<void> _showAudioRoutes() async {
+    final audio = _audioState;
+    if (audio == null) return;
 
-    if (bluetoothRoutes.length > 1) {
-      final route = await showModalBottomSheet<BluetoothAudioRoute>(
-        context: context,
-        builder: (context) => SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (final route in bluetoothRoutes)
-                ListTile(
-                  leading: const Icon(Icons.bluetooth),
-                  title: Text(route.displayName),
-                  onTap: () => Navigator.pop(context, route),
-                ),
-            ],
-          ),
+    final available = audio.availableRoutes;
+    final bluetoothRoutes = audio.bluetoothRoutes.toList();
+    final current = audio.currentRoute;
+
+    final options = <(IconData, String, bool, Future<void> Function())>[
+      if (available.contains(AudioRoute.phone))
+        (
+          Icons.phone_in_talk,
+          'Phone',
+          current == AudioRoute.phone,
+          () => _phone.phoneLib.audio.routeAudio(AudioRoute.phone),
         ),
-      );
+      if (available.contains(AudioRoute.speaker))
+        (
+          Icons.volume_up,
+          'Speaker',
+          current == AudioRoute.speaker,
+          () => _phone.phoneLib.audio.routeAudio(AudioRoute.speaker),
+        ),
+      if (available.contains(AudioRoute.bluetooth))
+        if (bluetoothRoutes.length > 1)
+          for (final route in bluetoothRoutes)
+            (
+              Icons.bluetooth,
+              route.displayName,
+              current == AudioRoute.bluetooth &&
+                  route.displayName == audio.bluetoothDeviceName,
+              () => _phone.phoneLib.audio.routeAudioToBluetoothDevice(route),
+            )
+        else
+          (
+            Icons.bluetooth,
+            audio.bluetoothDeviceName ?? 'Bluetooth',
+            current == AudioRoute.bluetooth,
+            () => _phone.phoneLib.audio.routeAudio(AudioRoute.bluetooth),
+          ),
+    ];
 
-      if (route != null) {
-        await _phone.phoneLib.audio.routeAudioToBluetoothDevice(route);
-      }
+    final selected = await showModalBottomSheet<Future<void> Function()>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final (icon, label, isCurrent, action) in options)
+              ListTile(
+                leading: Icon(icon),
+                title: Text(label),
+                trailing: isCurrent ? const Icon(Icons.check) : null,
+                selected: isCurrent,
+                onTap: () => Navigator.pop(context, action),
+              ),
+          ],
+        ),
+      ),
+    );
 
-      return;
-    }
-
-    await _phone.phoneLib.audio.routeAudio(AudioRoute.bluetooth);
+    await selected?.call();
   }
 
   Future<void> _transfer() async {
@@ -104,6 +133,8 @@ class _CallPageState extends State<CallPage> {
     }
 
     await _phone.phoneLib.actions.hold();
+
+    if (!mounted) return;
 
     final number = await showDialog<String>(
       context: context,
@@ -120,15 +151,25 @@ class _CallPageState extends State<CallPage> {
 
     showModalBottomSheet<void>(
       context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
       builder: (context) => SafeArea(
         child: StatefulBuilder(
           builder: (context, setSheetState) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 16),
-              Text(
-                sent.isEmpty ? 'Send DTMF' : sent,
-                style: Theme.of(context).textTheme.headlineSmall,
+              SizedBox(
+                height: 48,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      sent,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 8),
               Keypad(
@@ -145,10 +186,47 @@ class _CallPageState extends State<CallPage> {
     );
   }
 
+  Widget _audioControl(AudioState? audio) {
+    final current = audio?.currentRoute;
+
+    if (!(audio?.availableRoutes.contains(AudioRoute.bluetooth) ?? false)) {
+      final onSpeaker = current == AudioRoute.speaker;
+
+      return _CallControl(
+        icon: Icons.volume_up,
+        label: 'Speaker',
+        selected: onSpeaker,
+        onPressed: audio == null
+            ? null
+            : () => _phone.phoneLib.audio.routeAudio(
+                  onSpeaker ? AudioRoute.phone : AudioRoute.speaker,
+                ),
+      );
+    }
+
+    final (icon, label) = switch (current) {
+      AudioRoute.speaker => (Icons.volume_up, 'Speaker'),
+      AudioRoute.bluetooth => (
+          Icons.bluetooth_audio,
+          audio?.bluetoothDeviceName ?? 'Bluetooth',
+        ),
+      _ => (Icons.phone_in_talk, 'Phone'),
+    };
+
+    return _CallControl(
+      icon: icon,
+      label: label,
+      selected: current != AudioRoute.phone,
+      onPressed: _showAudioRoutes,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final call = _activeCall;
+    final inactiveCall = _inactiveCall;
     final audioState = _audioState;
+    final isMuted = audioState?.isMicrophoneMuted ?? false;
 
     return PopScope(
       canPop: false,
@@ -158,114 +236,56 @@ class _CallPageState extends State<CallPage> {
               ? const Center(child: CircularProgressIndicator())
               : Column(
                   children: [
+                    const SizedBox(width: double.infinity),
                     const Spacer(),
-                    Text(
-                      call.remotePartyHeading,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    Text(call.remotePartySubheading),
-                    const SizedBox(height: 8),
-                    Text(
-                      call.prettyDuration,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    Text(call.state.name),
-                    if (_eventStatus != null) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        _eventStatus!,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
+                    CallerHeader(call: call, status: _CallStatus(call)),
+                    if (inactiveCall != null) ...[
+                      const SizedBox(height: 24),
+                      _HeldCallBanner(inactiveCall),
                     ],
-                    if (_inactiveCall != null) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        'Transferring to: '
-                        '${_inactiveCall!.remotePartyHeading} '
-                        '${_inactiveCall!.remotePartySubheading}',
+                    const Spacer(flex: 2),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 320),
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 24,
+                        runSpacing: 20,
+                        children: [
+                          _CallControl(
+                            icon: isMuted ? Icons.mic_off : Icons.mic,
+                            label: 'Mute',
+                            selected: isMuted,
+                            onPressed: () => _phone.phoneLib.audio.toggleMute(),
+                          ),
+                          _CallControl(
+                            icon: Icons.dialpad,
+                            label: 'Keypad',
+                            onPressed: _showDtmfKeypad,
+                          ),
+                          _audioControl(audioState),
+                          _CallControl(
+                            icon: Icons.pause,
+                            label: 'Hold',
+                            selected: call.isOnHold,
+                            onPressed: () =>
+                                _phone.phoneLib.actions.toggleHold(),
+                          ),
+                          _CallControl(
+                            icon: inactiveCall != null
+                                ? Icons.call_merge
+                                : Icons.phone_forwarded,
+                            label:
+                                inactiveCall != null ? 'Complete' : 'Transfer',
+                            onPressed: _transfer,
+                          ),
+                        ],
                       ),
-                    ],
-                    const Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _CallActionButton(
-                          icon: audioState?.isMicrophoneMuted ?? false
-                              ? Icons.mic_off
-                              : Icons.mic,
-                          label: audioState?.isMicrophoneMuted ?? false
-                              ? 'Unmute'
-                              : 'Mute',
-                          selected: audioState?.isMicrophoneMuted ?? false,
-                          onPressed: () => _phone.phoneLib.audio.toggleMute(),
-                        ),
-                        _CallActionButton(
-                          icon: Icons.pause,
-                          label: call.isOnHold ? 'Unhold' : 'Hold',
-                          selected: call.isOnHold,
-                          onPressed: () => _phone.phoneLib.actions.toggleHold(),
-                        ),
-                        _CallActionButton(
-                          icon: Icons.dialpad,
-                          label: 'Keypad',
-                          onPressed: _showDtmfKeypad,
-                        ),
-                        _CallActionButton(
-                          icon: _inactiveCall != null
-                              ? Icons.call_merge
-                              : Icons.phone_forwarded,
-                          label: _inactiveCall != null ? 'Merge' : 'Transfer',
-                          onPressed: _transfer,
-                        ),
-                      ],
                     ),
-                    const SizedBox(height: 24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _CallActionButton(
-                          icon: Icons.phone_in_talk,
-                          label: 'Earpiece',
-                          selected:
-                              audioState?.currentRoute == AudioRoute.phone,
-                          onPressed: audioState?.availableRoutes
-                                      .contains(AudioRoute.phone) ??
-                                  false
-                              ? () => _phone.phoneLib.audio
-                                  .routeAudio(AudioRoute.phone)
-                              : null,
-                        ),
-                        _CallActionButton(
-                          icon: Icons.volume_up,
-                          label: 'Speaker',
-                          selected:
-                              audioState?.currentRoute == AudioRoute.speaker,
-                          onPressed: audioState?.availableRoutes
-                                      .contains(AudioRoute.speaker) ??
-                                  false
-                              ? () => _phone.phoneLib.audio
-                                  .routeAudio(AudioRoute.speaker)
-                              : null,
-                        ),
-                        _CallActionButton(
-                          icon: Icons.bluetooth,
-                          label: audioState?.bluetoothDeviceName ?? 'Bluetooth',
-                          selected:
-                              audioState?.currentRoute == AudioRoute.bluetooth,
-                          onPressed: audioState?.availableRoutes
-                                      .contains(AudioRoute.bluetooth) ??
-                                  false
-                              ? _routeAudioToBluetooth
-                              : null,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 32),
-                    FloatingActionButton(
+                    const SizedBox(height: 40),
+                    CallButton.hangUp(
+                      width: 160,
+                      height: 64,
                       onPressed: () => _phone.phoneLib.actions.end(),
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                      child: const Icon(Icons.call_end),
                     ),
                     const SizedBox(height: 32),
                   ],
@@ -276,8 +296,98 @@ class _CallPageState extends State<CallPage> {
   }
 }
 
-class _CallActionButton extends StatelessWidget {
-  const _CallActionButton({
+class _CallStatus extends StatelessWidget {
+  const _CallStatus(this.call);
+
+  final Call call;
+
+  String get _text {
+    final state = call.state;
+
+    if (state == CallState.initializing) return 'Calling…';
+    if (state == CallState.ringing) {
+      return call.direction.isInbound ? 'Incoming call' : 'Ringing…';
+    }
+    if (state == CallState.heldByLocal)
+      return 'On hold · ${call.prettyDuration}';
+    if (state == CallState.heldByRemote) {
+      return 'Held by other party · ${call.prettyDuration}';
+    }
+    if (state == CallState.ended) return 'Call ended';
+    if (state == CallState.error) return 'Call failed';
+
+    return call.prettyDuration;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final mos = call.currentMos;
+    final showQuality = call.state == CallState.connected && mos > 0;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(_text,
+            style:
+                const TextStyle(fontFeatures: [FontFeature.tabularFigures()])),
+        if (showQuality) ...[
+          const SizedBox(width: 8),
+          Tooltip(
+            message: 'Call quality (MOS ${mos.toStringAsFixed(1)})',
+            child: Icon(
+              mos >= 4
+                  ? Icons.signal_cellular_alt
+                  : mos >= 3
+                      ? Icons.signal_cellular_alt_2_bar
+                      : Icons.signal_cellular_alt_1_bar,
+              size: 18,
+              color: mos >= 3 ? null : Theme.of(context).colorScheme.error,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _HeldCallBanner extends StatelessWidget {
+  const _HeldCallBanner(this.call);
+
+  final Call call;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Material(
+      color: theme.colorScheme.surfaceContainerHigh,
+      shape: const StadiumBorder(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.pause_circle_outline,
+              size: 20,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                '${call.remotePartyHeading} on hold',
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CallControl extends StatelessWidget {
+  const _CallControl({
     required this.icon,
     required this.label,
     this.selected = false,
@@ -291,23 +401,32 @@ class _CallActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return SizedBox(
-      width: 88,
+      width: 80,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton.filledTonal(
-            isSelected: selected,
-            iconSize: 28,
+          IconButton(
             onPressed: onPressed,
+            iconSize: 28,
+            tooltip: label,
+            style: IconButton.styleFrom(
+              fixedSize: const Size.square(72),
+              backgroundColor:
+                  selected ? colors.primary : colors.surfaceContainerHigh,
+              foregroundColor: selected ? colors.onPrimary : colors.onSurface,
+              disabledBackgroundColor: colors.surfaceContainerHigh,
+            ),
             icon: Icon(icon),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
           Text(
             label,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodySmall,
+            style: Theme.of(context).textTheme.labelMedium,
           ),
         ],
       ),

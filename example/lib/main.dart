@@ -31,6 +31,10 @@ class ExampleApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Phone Lib Example',
       theme: ThemeData(colorSchemeSeed: Colors.green),
+      darkTheme: ThemeData(
+        colorSchemeSeed: Colors.green,
+        brightness: Brightness.dark,
+      ),
       home: const HomePage(),
     );
   }
@@ -93,27 +97,27 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void _selectTab(int index) {
+    setState(() => _selectedTab = index);
+
+    final voipgrid = Phone.instance.voipgrid;
+    if (index == 1 && voipgrid.isLoggedIn) voipgrid.fetchUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_selectedTab == 0 ? 'Dialer' : 'Settings'),
-      ),
+      appBar: _selectedTab == 1 ? AppBar(title: const Text('Settings')) : null,
       body: IndexedStack(
         index: _selectedTab,
-        children: const [
-          DialerPage(),
-          SettingsPage(),
+        children: [
+          DialerPage(onOpenSettings: () => _selectTab(1)),
+          const SettingsPage(),
         ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedTab,
-        onDestinationSelected: (index) {
-          setState(() => _selectedTab = index);
-
-          final voipgrid = Phone.instance.voipgrid;
-          if (index == 1 && voipgrid.isLoggedIn) voipgrid.fetchUser();
-        },
+        onDestinationSelected: _selectTab,
         destinations: const [
           NavigationDestination(icon: Icon(Icons.dialpad), label: 'Dialer'),
           NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),

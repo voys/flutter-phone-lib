@@ -50,6 +50,11 @@ class Phone extends ChangeNotifier {
   bool get enableAdvancedLogging =>
       _storage.getBool('enable_advanced_logging') ?? false;
 
+  String get lastDialedNumber => _storage.getString('last_dialed_number') ?? '';
+
+  Future<void> saveLastDialedNumber(String number) =>
+      _storage.setString('last_dialed_number', number);
+
   bool get hasValidCredentials =>
       username.isNotEmpty &&
       password.isNotEmpty &&
