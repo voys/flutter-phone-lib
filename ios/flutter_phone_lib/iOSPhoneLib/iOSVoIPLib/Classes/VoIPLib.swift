@@ -25,6 +25,10 @@ class VoIPLib {
         linphone.config
     }
     
+    var isRegistered: Bool {
+        linphone.linphoneCore?.defaultAccount?.state == .Ok
+    }
+
     var audio: LinphoneAudio {
         linphone.linphoneAudio
     }

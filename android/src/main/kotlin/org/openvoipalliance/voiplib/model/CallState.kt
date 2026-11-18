@@ -3,6 +3,7 @@ package org.openvoipalliance.voiplib.model
 enum class CallState {
     Idle,
     IncomingReceived,
+    PushIncomingReceived,
     OutgoingInit,
     OutgoingProgress,
     OutgoingRinging,
@@ -14,13 +15,13 @@ enum class CallState {
     Resuming,
     Referred,
     Error,
-    CallEnd,
+    End,
     PausedByRemote,
-    CallUpdatedByRemote,
-    CallIncomingEarlyMedia,
-    CallUpdating,
-    CallReleased,
-    CallEarlyUpdatedByRemote,
-    CallEarlyUpdating,
+    UpdatedByRemote,
+    IncomingEarlyMedia,
+    Updating,
+    Released,
+    EarlyUpdatedByRemote,
+    EarlyUpdating,
     Unknown
 }

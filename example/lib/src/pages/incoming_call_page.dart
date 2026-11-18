@@ -6,6 +6,8 @@ import 'package:flutter_phone_lib/flutter_phone_lib.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../phone.dart';
+import '../widgets/call_button.dart';
+import '../widgets/caller_header.dart';
 
 class IncomingCallPage extends StatefulWidget {
   const IncomingCallPage({super.key});
@@ -62,33 +64,24 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
           child: Column(
             children: [
               const Spacer(),
-              Text(
-                'Incoming call',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                _call?.remotePartyHeading ?? '',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              Text(_call?.remotePartySubheading ?? ''),
-              const Spacer(),
+              CallerHeader(call: _call, status: const Text('Incoming call')),
+              const Spacer(flex: 2),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  FloatingActionButton.large(
-                    heroTag: 'decline',
-                    onPressed: () => _phone.phoneLib.actions.decline(),
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    child: const Icon(Icons.call_end),
+                  _LabeledCallButton(
+                    label: 'Decline',
+                    button: CallButton.hangUp(
+                      tooltip: 'Decline',
+                      onPressed: () => _phone.phoneLib.actions.decline(),
+                    ),
                   ),
-                  FloatingActionButton.large(
-                    heroTag: 'answer',
-                    onPressed: _answer,
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                    child: const Icon(Icons.phone),
+                  _LabeledCallButton(
+                    label: 'Answer',
+                    button: CallButton.answer(
+                      tooltip: 'Answer',
+                      onPressed: _answer,
+                    ),
                   ),
                 ],
               ),
@@ -97,6 +90,25 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _LabeledCallButton extends StatelessWidget {
+  const _LabeledCallButton({required this.label, required this.button});
+
+  final String label;
+  final Widget button;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        button,
+        const SizedBox(height: 8),
+        Text(label, style: Theme.of(context).textTheme.labelLarge),
+      ],
     );
   }
 }

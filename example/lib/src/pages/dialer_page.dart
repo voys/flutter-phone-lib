@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../phone.dart';
+import '../widgets/call_button.dart';
 import '../widgets/keypad.dart';
 
 class DialerPage extends StatefulWidget {
-  const DialerPage({super.key});
+  const DialerPage({super.key, required this.onOpenSettings});
+
+  final VoidCallback onOpenSettings;
 
   @override
   State<DialerPage> createState() => _DialerPageState();
@@ -16,7 +19,7 @@ class DialerPage extends StatefulWidget {
 class _DialerPageState extends State<DialerPage> {
   final _phone = Phone.instance;
 
-  var _digits = '';
+  late var _digits = _phone.lastDialedNumber;
 
   void _onKeyPressed(String key) {
     if (_phone.isRunning) {
@@ -37,8 +40,12 @@ class _DialerPageState extends State<DialerPage> {
 
     if (!_phone.isRunning) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Configure your SIP credentials in Settings first.'),
+        SnackBar(
+          content: const Text('Configure your SIP credentials first.'),
+          action: SnackBarAction(
+            label: 'Settings',
+            onPressed: widget.onOpenSettings,
+          ),
         ),
       );
       return;
@@ -46,6 +53,7 @@ class _DialerPageState extends State<DialerPage> {
 
     if (!await _requestCallingPermissions()) return;
 
+    await _phone.saveLastDialedNumber(_digits);
     await _phone.phoneLib.call(_digits);
   }
 
@@ -66,68 +74,83 @@ class _DialerPageState extends State<DialerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListenableBuilder(
-          listenable: _phone,
-          builder: (context, _) => _phone.isRunning
-              ? const SizedBox.shrink()
-              : const Padding(
-                  padding: EdgeInsets.all(16),
+    final theme = Theme.of(context);
+
+    return SafeArea(
+      child: Column(
+        children: [
+          ListenableBuilder(
+            listenable: _phone,
+            builder: (context, _) => _phone.isRunning
+                ? const SizedBox(height: 16)
+                : Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: ActionChip(
+                      avatar: const Icon(Icons.info_outline),
+                      label: const Text('Not configured · Open settings'),
+                      onPressed: widget.onOpenSettings,
+                    ),
+                  ),
+          ),
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
                   child: Text(
-                    'Not started, configure your SIP credentials in Settings.',
-                    textAlign: TextAlign.center,
+                    _digits,
+                    maxLines: 1,
+                    style: theme.textTheme.displayMedium,
                   ),
                 ),
-        ),
-        Expanded(
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      const SizedBox(width: 64),
-                      Expanded(
-                        child: Text(
-                          _digits,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineMedium,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 64,
-                        child: _digits.isEmpty
-                            ? null
-                            : GestureDetector(
-                                onLongPress: () => setState(() => _digits = ''),
-                                child: IconButton(
-                                  icon: const Icon(Icons.backspace_outlined),
-                                  onPressed: _backspace,
-                                ),
-                              ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Keypad(onKeyPressed: _onKeyPressed),
-                  const SizedBox(height: 24),
-                  FloatingActionButton(
-                    onPressed: _call,
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                    child: const Icon(Icons.phone),
-                  ),
-                  const SizedBox(height: 16),
-                ],
               ),
             ),
           ),
-        ),
-      ],
+          Keypad(
+            onKeyPressed: _onKeyPressed,
+            onPlus: () => setState(() => _digits += '+'),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Padding(
+                padding: Keypad.keyPadding,
+                child: SizedBox.square(dimension: Keypad.keySize),
+              ),
+              Padding(
+                padding: Keypad.keyPadding,
+                child: CallButton.answer(onPressed: _call),
+              ),
+              Padding(
+                padding: Keypad.keyPadding,
+                child: AnimatedOpacity(
+                  opacity: _digits.isEmpty ? 0 : 1,
+                  duration: const Duration(milliseconds: 150),
+                  child: SizedBox.square(
+                    dimension: Keypad.keySize,
+                    child: Tooltip(
+                      message: 'Backspace',
+                      child: InkWell(
+                        customBorder: const CircleBorder(),
+                        onTap: _digits.isEmpty ? null : _backspace,
+                        onLongPress: _digits.isEmpty
+                            ? null
+                            : () => setState(() => _digits = ''),
+                        child: Icon(
+                          Icons.backspace_outlined,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
     );
   }
 }

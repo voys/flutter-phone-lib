@@ -39,6 +39,10 @@ public class PIL {
             CallSessionState(activeCall: calls.activeCall, inactiveCall: calls.inactiveCall, audioState: audio.state)
         }
     }
+
+    public var isRegistered: Bool {
+        voipLib.isRegistered
+    }
     
     static public var isInitialized: Bool {
         get {

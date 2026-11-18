@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.10] - 2026-11-17
+
+- Call states are now the same on Android and iOS. An incoming call that hasn't been answered is `RINGING` on both; Android reported it as `INITIALIZING`. An outgoing call is `INITIALIZING` until the other side rings, then `RINGING`; iOS reported it as `RINGING` straight away. Apps that check for `INITIALIZING` to detect an unanswered incoming call must check for `RINGING` instead. Use `Call.direction` to tell incoming and outgoing calls apart.
+- On iOS a call is now `HELD_BY_LOCAL` as soon as hold starts, as it already was on Android. Before, iOS reported it as `CONNECTED` until the hold was confirmed.
+- Fixed a bug on Android where ended calls were reported as `ERROR` instead of `ENDED`, and calls being updated or renegotiated as `ERROR` instead of `CONNECTED`.
+- Added `PhoneLib.isRegistered`, which says whether the SIP account is currently registered.
+
 ## [1.0.9] - 2026-11-06
 
 - Migrated the Android plugin to Flutter's built-in Kotlin. It no longer applies the Kotlin Gradle Plugin (KGP), so apps no longer get the warning that future Flutter versions will fail to build with it. Apps that keep `android.builtInKotlin=false` still build: Flutter applies KGP to the plugin, as long as the app declares KGP in its root `plugins {}` block.
