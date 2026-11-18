@@ -106,6 +106,10 @@ class PhoneLib {
   Future<void> call(String number) =>
       channel.invokeMethod('PhoneLib.call', number);
 
+  /// Whether the SIP account is currently registered with the server.
+  Future<bool> get isRegistered async =>
+      await channel.invokeMethod<bool>('PhoneLib.isRegistered') ?? false;
+
   /// The version of the underlying linphone SDK.
   Future<String> get linphoneVersion async =>
       await channel.invokeMethod<String>('PhoneLib.linphoneVersion') ?? '';

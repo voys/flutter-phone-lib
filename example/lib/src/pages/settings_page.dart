@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../phone.dart';
+import '../voipgrid.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -29,30 +32,60 @@ class _SettingsPageState extends State<SettingsPage> {
   var _applying = false;
   var _loggingIn = false;
   var _registering = false;
+  var _refreshingUser = false;
+  var _sipRegistered = false;
+  late final Timer _sipPoller;
 
   final _voipSection = GlobalKey();
   final _voipgridSection = GlobalKey();
   final _middlewareSection = GlobalKey();
 
-  void _scrollTo(GlobalKey section) {
-    final context = section.currentContext;
-    if (context == null) return;
+  final _voipExpansion = ExpansibleController();
+  final _voipgridExpansion = ExpansibleController();
+  final _middlewareExpansion = ExpansibleController();
 
-    Scrollable.ensureVisible(
-      context,
-      duration: const Duration(milliseconds: 300),
-      alignment: 0,
-    );
+  void _open(GlobalKey section, ExpansibleController expansion) {
+    expansion.expand();
+
+    // Wait a frame so the section has started expanding before scrolling.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = section.currentContext;
+      if (context == null) return;
+
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 300),
+        alignment: 0,
+      );
+    });
   }
 
   @override
   void initState() {
     super.initState();
     _phone.middleware.refresh();
+    if (_phone.voipgrid.isLoggedIn) _phone.voipgrid.fetchUser();
+    _pollSipRegistration();
+    _sipPoller = Timer.periodic(
+      const Duration(seconds: 2),
+      (_) => _pollSipRegistration(),
+    );
+  }
+
+  Future<void> _pollSipRegistration() async {
+    final registered = _phone.isRunning && await _phone.phoneLib.isRegistered;
+
+    if (mounted && registered != _sipRegistered) {
+      setState(() => _sipRegistered = registered);
+    }
   }
 
   @override
   void dispose() {
+    _sipPoller.cancel();
+    _voipExpansion.dispose();
+    _voipgridExpansion.dispose();
+    _middlewareExpansion.dispose();
     _username.dispose();
     _password.dispose();
     _domain.dispose();
@@ -71,10 +104,21 @@ class _SettingsPageState extends State<SettingsPage> {
         password: _voipgridPassword.text,
       );
       await _phone.voipgrid.login();
+      await _phone.voipgrid.fetchUser();
     } on Exception catch (e) {
       _showSnackBar('$e');
     } finally {
       if (mounted) setState(() => _loggingIn = false);
+    }
+  }
+
+  Future<void> _refreshUser() async {
+    setState(() => _refreshingUser = true);
+
+    try {
+      await _phone.voipgrid.fetchUser();
+    } finally {
+      if (mounted) setState(() => _refreshingUser = false);
     }
   }
 
@@ -117,10 +161,10 @@ class _SettingsPageState extends State<SettingsPage> {
       final started = await _phone.start();
 
       if (!started) {
-        _showSnackBar('Credentials are incomplete, phone lib not started.');
+        _showSnackBar('Credentials are incomplete, not registering.');
       }
     } on Exception catch (e) {
-      _showSnackBar('Failed to start: $e');
+      _showSnackBar('Failed to register: $e');
     } finally {
       if (mounted) setState(() => _applying = false);
     }
@@ -143,190 +187,370 @@ class _SettingsPageState extends State<SettingsPage> {
       listenable: Listenable.merge([_phone, voipgrid, middleware]),
       builder: (context, _) => Column(
         children: [
+          const SizedBox(height: 8),
           _StatusBar(
             items: [
               _Status(
-                'Phone lib',
-                onTap: () => _scrollTo(_voipSection),
-                _phone.isRunning,
-                'Running',
-                'Not running',
+                'SIP',
+                onTap: () => _open(_voipSection, _voipExpansion),
+                _sipRegistered,
+                'Registered',
+                _phone.isRunning ? 'Failed' : 'Not registered',
+                failed: _phone.isRunning,
               ),
               _Status(
                 'VoIPGRID',
-                onTap: () => _scrollTo(_voipgridSection),
+                onTap: () => _open(_voipgridSection, _voipgridExpansion),
                 voipgrid.isLoggedIn,
                 'Logged in',
                 'Not logged in',
               ),
               _Status(
                 'Middleware',
-                onTap: () => _scrollTo(_middlewareSection),
+                onTap: () => _open(_middlewareSection, _middlewareExpansion),
                 middleware.isRegistered,
                 'Registered',
                 'Not registered',
               ),
             ],
           ),
-          const Divider(height: 1),
+          if (voipgrid.isLoggedIn && voipgrid.user != null) ...[
+            const SizedBox(height: 4),
+            _Account(
+              voipgrid.user!,
+              onTap: () => _open(_voipgridSection, _voipgridExpansion),
+            ),
+          ],
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    'VoIP authentication',
+                  _Section(
                     key: _voipSection,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  if (kDebugMode && _phone.username.isEmpty) ...[
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(
-                          'Tip: debug builds can pre-fill these fields from the '
-                          '.env file, see .env.example.',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                  TextField(
-                    controller: _username,
-                    decoration: const InputDecoration(labelText: 'Username'),
-                  ),
-                  TextField(
-                    controller: _password,
-                    obscureText: true,
-                    decoration: const InputDecoration(labelText: 'Password'),
-                  ),
-                  TextField(
-                    controller: _domain,
-                    keyboardType: TextInputType.url,
-                    decoration: const InputDecoration(labelText: 'Domain'),
-                  ),
-                  TextField(
-                    controller: _port,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: 'Port'),
-                  ),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Encryption (TLS)'),
-                    value: _secure,
-                    onChanged: (value) => setState(() => _secure = value),
-                  ),
-                  const SizedBox(height: 8),
-                  _Actions(
-                    busy: _applying,
-                    primaryLabel: 'Start',
-                    onPrimary: _saveAndApply,
-                    secondaryLabel: 'Stop',
-                    onSecondary: _phone.isRunning ? _stop : null,
-                  ),
-                  const Divider(height: 32),
-                  Text(
-                    'VoIPGRID authentication',
-                    key: _voipgridSection,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _voipgridUsername,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(labelText: 'Email'),
-                  ),
-                  TextField(
-                    controller: _voipgridPassword,
-                    obscureText: true,
-                    decoration: const InputDecoration(labelText: 'Password'),
-                  ),
-                  const SizedBox(height: 8),
-                  _Actions(
-                    busy: _loggingIn,
-                    primaryLabel: 'Log in',
-                    onPrimary: _login,
-                    secondaryLabel: 'Log out',
-                    onSecondary: voipgrid.isLoggedIn ? _logout : null,
-                  ),
-                  const Divider(height: 32),
-                  Text(
-                    'Middleware registration',
-                    key: _middlewareSection,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Push token'),
-                    subtitle: middleware.pushToken == null
-                        ? const Text('Not received yet')
-                        : SelectableText(
-                            middleware.pushToken!,
-                            style: const TextStyle(fontFamily: 'monospace'),
+                    controller: _voipExpansion,
+                    icon: Icons.phone,
+                    title: 'VoIP authentication',
+                    subtitle: _phone.username.isEmpty
+                        ? 'Not configured'
+                        : '${_phone.username}@${_phone.domain}',
+                    children: [
+                      if (kDebugMode && _phone.username.isEmpty) ...[
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Text(
+                              'Tip: debug builds can pre-fill these fields '
+                              'from the .env file, see .env.example.',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
                           ),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                      TextField(
+                        controller: _username,
+                        decoration:
+                            const InputDecoration(labelText: 'Username'),
+                      ),
+                      _PasswordField(controller: _password),
+                      TextField(
+                        controller: _domain,
+                        keyboardType: TextInputType.url,
+                        decoration: const InputDecoration(labelText: 'Domain'),
+                      ),
+                      TextField(
+                        controller: _port,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(labelText: 'Port'),
+                      ),
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Encryption (TLS)'),
+                        value: _secure,
+                        onChanged: (value) => setState(() => _secure = value),
+                      ),
+                      const SizedBox(height: 8),
+                      _Actions(
+                        busy: _applying,
+                        primaryLabel: 'Register',
+                        onPrimary: _saveAndApply,
+                        secondaryLabel: 'Unregister',
+                        onSecondary: _phone.isRunning ? _stop : null,
+                      ),
+                    ],
                   ),
-                  _Actions(
-                    busy: _registering,
-                    primaryLabel: 'Register',
-                    onPrimary: voipgrid.isLoggedIn ? _register : null,
-                    secondaryLabel: 'Unregister',
-                    onSecondary: middleware.isRegistered ? _unregister : null,
+                  _Section(
+                    key: _voipgridSection,
+                    controller: _voipgridExpansion,
+                    icon: Icons.cloud_outlined,
+                    title: 'VoIPGRID authentication',
+                    subtitle: voipgrid.isLoggedIn
+                        ? voipgrid.username
+                        : 'Not logged in',
+                    children: [
+                      TextField(
+                        controller: _voipgridUsername,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: const InputDecoration(labelText: 'Email'),
+                      ),
+                      _PasswordField(controller: _voipgridPassword),
+                      const SizedBox(height: 8),
+                      _Actions(
+                        busy: _loggingIn,
+                        primaryLabel: 'Log in',
+                        onPrimary: _login,
+                        secondaryLabel: 'Log out',
+                        onSecondary: voipgrid.isLoggedIn ? _logout : null,
+                      ),
+                      if (voipgrid.isLoggedIn) ...[
+                        const SizedBox(height: 8),
+                        OutlinedButton.icon(
+                          onPressed: _refreshingUser ? null : _refreshUser,
+                          icon: const Icon(Icons.refresh),
+                          label: const Text('Refresh account info'),
+                        ),
+                      ],
+                    ],
                   ),
-                  const Divider(height: 32),
-                  Text(
-                    'Preferences',
-                    style: Theme.of(context).textTheme.titleMedium,
+                  _Section(
+                    key: _middlewareSection,
+                    controller: _middlewareExpansion,
+                    icon: Icons.notifications_outlined,
+                    title: 'Middleware registration',
+                    subtitle: middleware.isRegistered
+                        ? 'Registered'
+                        : 'Not registered',
+                    children: [
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Push token'),
+                        subtitle: middleware.pushToken == null
+                            ? const Text('Not received yet')
+                            : SelectableText(
+                                middleware.pushToken!,
+                                style: const TextStyle(fontFamily: 'monospace'),
+                              ),
+                      ),
+                      _Actions(
+                        busy: _registering,
+                        primaryLabel: 'Register',
+                        onPrimary: voipgrid.isLoggedIn ? _register : null,
+                        secondaryLabel: 'Unregister',
+                        onSecondary:
+                            middleware.isRegistered ? _unregister : null,
+                      ),
+                    ],
                   ),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Use application provided ringtone'),
-                    value: _phone.useApplicationProvidedRingtone,
-                    onChanged: (value) =>
-                        _phone.setUseApplicationProvidedRingtone(value),
+                  _Section(
+                    icon: Icons.tune,
+                    title: 'Preferences',
+                    children: [
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Use application provided ringtone'),
+                        value: _phone.useApplicationProvidedRingtone,
+                        onChanged: (value) =>
+                            _phone.setUseApplicationProvidedRingtone(value),
+                      ),
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Show calls in native recents'),
+                        value: _phone.showCallsInNativeRecents,
+                        onChanged: (value) =>
+                            _phone.setShowCallsInNativeRecents(value),
+                      ),
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Advanced logging'),
+                        value: _phone.enableAdvancedLogging,
+                        onChanged: (value) =>
+                            _phone.setEnableAdvancedLogging(value),
+                      ),
+                    ],
                   ),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Show calls in native recents'),
-                    value: _phone.showCallsInNativeRecents,
-                    onChanged: (value) =>
-                        _phone.setShowCallsInNativeRecents(value),
-                  ),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Advanced logging'),
-                    value: _phone.enableAdvancedLogging,
-                    onChanged: (value) =>
-                        _phone.setEnableAdvancedLogging(value),
-                  ),
-                  const Divider(height: 32),
-                  Text(
-                    'Advanced',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Echo cancellation calibration'),
-                    enabled: _phone.isRunning,
-                    onTap: () {
-                      _phone.phoneLib.performEchoCancellationCalibration();
-                      _showSnackBar(
-                          'Performing echo cancellation calibration...');
-                    },
-                  ),
-                  const Divider(height: 32),
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Linphone version'),
-                    subtitle: Text(_phone.linphoneVersion ?? 'Unknown'),
+                  _Section(
+                    icon: Icons.build_outlined,
+                    title: 'Advanced',
+                    children: [
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Echo cancellation calibration'),
+                        enabled: _phone.isRunning,
+                        onTap: () {
+                          _phone.phoneLib.performEchoCancellationCalibration();
+                          _showSnackBar(
+                            'Performing echo cancellation calibration...',
+                          );
+                        },
+                      ),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Linphone version'),
+                        subtitle: Text(_phone.linphoneVersion ?? 'Unknown'),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _Section extends StatelessWidget {
+  const _Section({
+    super.key,
+    this.controller,
+    required this.icon,
+    required this.title,
+    this.subtitle,
+    required this.children,
+  });
+
+  final ExpansibleController? controller;
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: ExpansionTile(
+        controller: controller,
+        leading: Icon(icon),
+        title: Text(title),
+        subtitle: subtitle == null ? null : Text(subtitle!),
+        shape: const Border(),
+        collapsedShape: const Border(),
+        expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        children: children,
+      ),
+    );
+  }
+}
+
+class _Account extends StatelessWidget {
+  const _Account(this.user, {required this.onTap});
+
+  final VoipgridUser user;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+
+    final numbers = [
+      if (user.internalNumber != null)
+        (Icons.person_outline, user.internalNumber!),
+      if (user.voipAccountNumber != null)
+        (Icons.phone, user.voipAccountNumber!),
+    ];
+
+    return _Block(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            children: [
+              Text(
+                user.name,
+                style: theme.textTheme.titleSmall,
+                textAlign: TextAlign.center,
+              ),
+              if (numbers.isNotEmpty)
+                Text.rich(
+                  TextSpan(
+                    style: theme.textTheme.bodySmall,
+                    children: [
+                      for (final (i, (icon, value)) in numbers.indexed) ...[
+                        if (i > 0) TextSpan(text: '   |   ', style: muted),
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 4),
+                            child: Icon(
+                              icon,
+                              size: 14,
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                        TextSpan(text: value),
+                      ],
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              if (user.isDestinationElsewhere)
+                Text.rich(
+                  TextSpan(
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.error,
+                    ),
+                    children: [
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: Icon(
+                            Icons.warning_amber,
+                            size: 14,
+                            color: theme.colorScheme.error,
+                          ),
+                        ),
+                      ),
+                      const TextSpan(
+                        text: 'Destination is not set to this VoIP account',
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PasswordField extends StatefulWidget {
+  const _PasswordField({required this.controller});
+
+  final TextEditingController controller;
+
+  @override
+  State<_PasswordField> createState() => _PasswordFieldState();
+}
+
+class _PasswordFieldState extends State<_PasswordField> {
+  var _obscured = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: widget.controller,
+      obscureText: _obscured,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        suffixIcon: IconButton(
+          tooltip: _obscured ? 'Show password' : 'Hide password',
+          icon: Icon(_obscured ? Icons.visibility : Icons.visibility_off),
+          onPressed: () => setState(() => _obscured = !_obscured),
+        ),
       ),
     );
   }
@@ -376,6 +600,7 @@ class _Status {
     this.activeText,
     this.inactiveText, {
     required this.onTap,
+    this.failed = false,
   });
 
   final String title;
@@ -383,6 +608,9 @@ class _Status {
   final String activeText;
   final String inactiveText;
   final VoidCallback onTap;
+
+  /// Shows the inactive state as an error rather than neutral.
+  final bool failed;
 }
 
 class _StatusBar extends StatelessWidget {
@@ -394,8 +622,7 @@ class _StatusBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Material(
-      color: theme.colorScheme.surfaceContainerLow,
+    return _Block(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
@@ -410,11 +637,15 @@ class _StatusBar extends StatelessWidget {
                       Icon(
                         item.active
                             ? Icons.check_circle
-                            : Icons.radio_button_unchecked,
+                            : item.failed
+                                ? Icons.error
+                                : Icons.radio_button_unchecked,
                         size: 20,
                         color: item.active
                             ? Colors.green
-                            : theme.colorScheme.outline,
+                            : item.failed
+                                ? theme.colorScheme.error
+                                : theme.colorScheme.outline,
                       ),
                       const SizedBox(height: 4),
                       Text(item.title, style: theme.textTheme.labelMedium),
@@ -430,6 +661,31 @@ class _StatusBar extends StatelessWidget {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _Block extends StatelessWidget {
+  const _Block({required this.child, this.onTap});
+
+  final Widget child;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Material(
+        color: theme.colorScheme.surfaceContainer,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: theme.colorScheme.outlineVariant),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: InkWell(onTap: onTap, child: child),
       ),
     );
   }

@@ -77,13 +77,13 @@ public class PILCallFactory {
     
     private func convertCallState(state: VoipLibCallState) -> CallState {
         switch state {
-        case .idle:
+        case .idle, .outgoingDidInitialize:
             return .initializing
-        case .incomingReceived, .outgoingDidInitialize, .outgoingProgress, .outgoingRinging, .incomingReceivedFromPush:
+        case .incomingReceived, .outgoingProgress, .outgoingRinging, .incomingReceivedFromPush:
             return .ringing
-        case .connected, .streamsRunning, .outgoingEarlyMedia, .earlyUpdatedByRemote, .earlyUpdating, .incomingEarlyMedia, .pausing, .resuming, .referred, .updatedByRemote, .updating:
+        case .connected, .streamsRunning, .outgoingEarlyMedia, .earlyUpdatedByRemote, .earlyUpdating, .incomingEarlyMedia, .resuming, .referred, .updatedByRemote, .updating:
             return .connected
-        case .paused:
+        case .pausing, .paused:
             return .heldByLocal
         case .pausedByRemote:
             return .heldByRemote

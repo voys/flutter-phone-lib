@@ -41,6 +41,10 @@ class VoIPLib {
     val isInitialized: Boolean
         get() = linphoneCoreInstanceManager.state.initialized
 
+    val isRegistered: Boolean
+        get() = linphoneCoreInstanceManager.safeLinphoneCore?.defaultAccount?.state ==
+            org.linphone.core.RegistrationState.Ok
+
     val isNetworkReachable
         get() = linphoneCoreInstanceManager.safeLinphoneCore?.isNetworkReachable ?: false
 

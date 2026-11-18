@@ -56,6 +56,9 @@ class PIL internal constructor(internal val app: ApplicationSetup) {
     val sessionState: CallSessionState
         get() = CallSessionState(calls.active, calls.inactive, audio.state)
 
+    val isRegistered: Boolean
+        get() = voipLib.isRegistered
+
     var versionInfo: VersionInfo = VersionInfo.build(app.application, voipLib)
         set(value) {
             field = value
