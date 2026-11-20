@@ -26,23 +26,21 @@ final class ContactsTests: XCTestCase {
         XCTAssertEqual(contact.toContact().name, "Alice Example")
     }
 
-    // Bug: a contact without a given or family name (e.g. only a company) becomes " ",
-    // which counts as found and hides the caller's display name and number.
-    func testAddressBookContactsWithoutANameAreABlankName() {
+    func testAddressBookContactsWithOnlyAGivenNameHaveNoTrailingSpace() {
+        let contact = CNMutableContact()
+        contact.givenName = "Alice"
+
+        XCTAssertEqual(contact.toContact().name, "Alice")
+    }
+
+    func testAddressBookContactsWithoutANameDoNotExist() {
         let contact = CNMutableContact()
         contact.organizationName = "Example B.V."
 
         let found = contact.toContact()
 
-        XCTAssertEqual(found.name, " ")
-        XCTAssertTrue(found.exists)
-        XCTAssertEqual(
-            Call(
-                remoteNumber: "+31501234567", displayName: "Reception", state: .ringing, direction: .inbound,
-                duration: 0, isOnHold: false, uuid: UUID(), mos: 0, currentMos: 0, contact: found, reason: ""
-            ).remotePartyHeading,
-            " "
-        )
+        XCTAssertEqual(found.name, "")
+        XCTAssertFalse(found.exists)
     }
 
     func testNothingIsFoundWithoutContactsAccess() throws {

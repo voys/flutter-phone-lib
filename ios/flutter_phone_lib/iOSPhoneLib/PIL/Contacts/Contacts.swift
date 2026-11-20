@@ -51,7 +51,7 @@ class Contacts {
             cachedContacts[identifier] = contact?.toContact() ?? Contact.notFound()
         }
         
-        return cachedContacts[identifier, default: nil]
+        return cachedContacts[identifier, default: nil].flatMap { $0.exists ? $0 : nil }
     }
     
     private func searchForNumberInUnifiedContacts(number: String) -> CNContact? {
@@ -107,6 +107,6 @@ extension VoIPLibCall {
 
 extension CNContact {
     func toContact() -> Contact {
-        return Contact("\(givenName) \(familyName)")
+        return Contact("\(givenName) \(familyName)".trimmingCharacters(in: .whitespaces))
     }
 }
