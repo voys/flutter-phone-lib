@@ -181,13 +181,8 @@ void main() {
       expect(message.data, {'unique_key': 'abc'});
     });
 
-    // Bug: the `{}` fallback is a Map<dynamic, dynamic>, which fails the
-    // generated cast.
-    test('throws when data is missing', () {
-      expect(
-        () => RemoteMessage.fromMap(<Object?, Object?>{}),
-        throwsA(isA<TypeError>()),
-      );
+    test('has empty data when data is missing', () {
+      expect(RemoteMessage.fromMap(<Object?, Object?>{}).data, isEmpty);
     });
   });
 
