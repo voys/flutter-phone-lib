@@ -1,0 +1,84 @@
+{
+  "sessionState": {
+    "activeCall": {
+      "remoteNumber": "+31501234567",
+      "displayName": "Alice",
+      "state": "CONNECTED",
+      "direction": "OUTBOUND",
+      "duration": 75,
+      "isOnHold": false,
+      "uuid": "c0ffee00-0000-4000-8000-000000000001",
+      "mos": 4.5,
+      "currentMos": 4.25,
+      "contact": {
+        "name": "Alice Example",
+        "imageUri": "content://com.android.contacts/contacts/1/photo"
+      },
+      "remotePartyHeading": "Alice Example",
+      "remotePartySubheading": "+31501234567",
+      "prettyDuration": "01:15",
+      "callId": "call-id-1",
+      "reason": ""
+    },
+    "inactiveCall": {
+      "remoteNumber": "+31507654321",
+      "displayName": "",
+      "state": "HELD_BY_LOCAL",
+      "direction": "INBOUND",
+      "duration": 3725,
+      "isOnHold": true,
+      "uuid": "c0ffee00-0000-4000-8000-000000000002",
+      "mos": 0.0,
+      "currentMos": 0.0,
+      "contact": null,
+      "remotePartyHeading": "+31507654321",
+      "remotePartySubheading": "",
+      "prettyDuration": "1:02:05",
+      "callId": "call-id-2",
+      "reason": "Busy Here"
+    },
+    "audioState": {
+      "currentRoute": "BLUETOOTH",
+      "availableRoutes": ["SPEAKER", "PHONE", "BLUETOOTH"],
+      "bluetoothDeviceName": "Headset",
+      "isMicrophoneMuted": true,
+      "bluetoothRoutes": [
+        { "identifier": "00:11:22:33:44:55", "displayName": "Headset" }
+      ]
+    }
+  },
+  "idleSessionState": {
+    "activeCall": null,
+    "inactiveCall": null,
+    "audioState": {
+      "currentRoute": "PHONE",
+      "availableRoutes": ["SPEAKER", "PHONE"],
+      "bluetoothDeviceName": null,
+      "isMicrophoneMuted": false,
+      "bluetoothRoutes": []
+    }
+  },
+  "callSessionEventTypes": [
+    "OutgoingCallStarted",
+    "IncomingCallReceived",
+    "CallEnded",
+    "CallReleased",
+    "CallConnected",
+    "CallDurationUpdated",
+    "AudioStateUpdated",
+    "CallStateUpdated",
+    "AttendedTransferStarted",
+    "AttendedTransferConnected",
+    "AttendedTransferAborted",
+    "AttendedTransferEnded"
+  ],
+  "callSetupFailedEventTypes": [
+    "OutgoingCallSetupFailed",
+    "IncomingCallSetupFailed"
+  ],
+  "callSetupFailedReasons": [
+    "IN_CALL",
+    "REJECTED_BY_ANDROID_TELECOM_FRAMEWORK",
+    "UNABLE_TO_REGISTER"
+  ]
+}

@@ -8,14 +8,38 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		2076B3C9DC36F599B16AF6EE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D12C41046F86FB0CD2A6687 /* Foundation.framework */; };
+		27C32EE9B79009D2B46C028B /* DartToNativeContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C08A3C94ACA141AFEBCFB71 /* DartToNativeContractTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		57EA466E36D82C40B70C329B /* NativeToDartContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E56B02460AC58F9CE1636DF /* NativeToDartContractTests.swift */; };
+		5D3EC4295E83AFEA60FCAF68 /* NativeIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD358C2D82CBC4D94268E029 /* NativeIntegrationTests.swift */; };
+		6DED91715B39A0AA2062945B /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC7923144DBD1CDF73318275 /* TestSupport.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
-		7A1E0001C0FFEE0000000001 /* ExampleMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A1E0001C0FFEE0000000002 /* ExampleMiddleware.swift */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
+		7A1E0001C0FFEE0000000001 /* ExampleMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A1E0001C0FFEE0000000002 /* ExampleMiddleware.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		EFD07E61BA4AC158CA1ECFC4 /* BridgeUtilitiesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D54289449B29FD58CE51636 /* BridgeUtilitiesTests.swift */; };
+		FEB995EAC84DE061A77F26A0 /* CallTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CC939FCFDD3BACEE4F6A7A /* CallTests.swift */; };
+		DD397857C40DF77F9D7E0813 /* CallsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5D4FF932F3EF7D833A9081 /* CallsTests.swift */; };
+		0FBB4110B8EE80D8FC368668 /* ConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1263746AB1876A4FFD9B4C9 /* ConfigurationTests.swift */; };
+		65AD023DC5370147F7D5103C /* ContactsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C8EB01922F8745EF5FB69C /* ContactsTests.swift */; };
+		697C31CFD6845E9BCD5DC8C8 /* NativeMiddlewareBridgerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E201C1B8551D889E62C3978B /* NativeMiddlewareBridgerTests.swift */; };
+		2ABAA8FB7A01659BBB5F3EE4 /* PhoneLibPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBDDC80C924B5B70F9B2A080 /* PhoneLibPluginTests.swift */; };
+		0DE51F20AD512C3FD6BA5AFE /* PILTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D06219E53699954C35B8179 /* PILTests.swift */; };
+		39FA11CE7FCAB20A7AA0260B /* VoIPLibTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7ACB34D64D40D349B902BF /* VoIPLibTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FFE64CE1C3895A4DA5A78730 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
+			remoteInfo = Runner;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
@@ -33,12 +57,17 @@
 /* Begin PBXFileReference section */
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		1E56B02460AC58F9CE1636DF /* NativeToDartContractTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeToDartContractTests.swift; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		3D12C41046F86FB0CD2A6687 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		5C08A3C94ACA141AFEBCFB71 /* DartToNativeContractTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DartToNativeContractTests.swift; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		784666492D4C4C64000A1A5F /* FlutterFramework */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterFramework; path = Flutter/ephemeral/Packages/.packages/FlutterFramework; sourceTree = "<group>"; };
+		78DABEA22ED26510000E7860 /* flutter_phone_lib */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = flutter_phone_lib; path = ../../ios/flutter_phone_lib; sourceTree = "<group>"; };
+		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
 		7A1E0001C0FFEE0000000002 /* ExampleMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleMiddleware.swift; sourceTree = "<group>"; };
 		7A1E0001C0FFEE0000000003 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
-		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
@@ -47,11 +76,29 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		784666492D4C4C64000A1A5F /* FlutterFramework */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterFramework; path = Flutter/ephemeral/Packages/.packages/FlutterFramework; sourceTree = "<group>"; };
-		78DABEA22ED26510000E7860 /* flutter_phone_lib */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = flutter_phone_lib; path = ../../ios/flutter_phone_lib; sourceTree = "<group>"; };
+		A7EAB91B4AE08C854976A4DF /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC7923144DBD1CDF73318275 /* TestSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TestSupport.swift; sourceTree = "<group>"; };
+		FD358C2D82CBC4D94268E029 /* NativeIntegrationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeIntegrationTests.swift; sourceTree = "<group>"; };
+		9D54289449B29FD58CE51636 /* BridgeUtilitiesTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BridgeUtilitiesTests.swift; sourceTree = "<group>"; };
+		92CC939FCFDD3BACEE4F6A7A /* CallTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CallTests.swift; sourceTree = "<group>"; };
+		9D5D4FF932F3EF7D833A9081 /* CallsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CallsTests.swift; sourceTree = "<group>"; };
+		D1263746AB1876A4FFD9B4C9 /* ConfigurationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ConfigurationTests.swift; sourceTree = "<group>"; };
+		C6C8EB01922F8745EF5FB69C /* ContactsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContactsTests.swift; sourceTree = "<group>"; };
+		E201C1B8551D889E62C3978B /* NativeMiddlewareBridgerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeMiddlewareBridgerTests.swift; sourceTree = "<group>"; };
+		FBDDC80C924B5B70F9B2A080 /* PhoneLibPluginTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhoneLibPluginTests.swift; sourceTree = "<group>"; };
+		1D06219E53699954C35B8179 /* PILTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PILTests.swift; sourceTree = "<group>"; };
+		8C7ACB34D64D40D349B902BF /* VoIPLibTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VoIPLibTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3FE421DF61865763A635D96E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2076B3C9DC36F599B16AF6EE /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EB1CF9000F007C117D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -68,6 +115,14 @@
 			children = (
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		2E0B162F8E7CBA51A599F022 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				3D12C41046F86FB0CD2A6687 /* Foundation.framework */,
+			);
+			name = iOS;
 			sourceTree = "<group>";
 		};
 		9740EEB11CF90186004384FC /* Flutter */ = {
@@ -91,6 +146,8 @@
 				97C146F01CF9000F007C117D /* Runner */,
 				97C146EF1CF9000F007C117D /* Products */,
 				17773DB3E398D05B9A471BC0 /* Pods */,
+				C286429C701EA19E868F2E39 /* Frameworks */,
+				9BE5B396DBF6C499A901D952 /* RunnerTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -98,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
+				A7EAB91B4AE08C854976A4DF /* RunnerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -119,9 +177,56 @@
 			path = Runner;
 			sourceTree = "<group>";
 		};
+		9BE5B396DBF6C499A901D952 /* RunnerTests */ = {
+			isa = PBXGroup;
+			children = (
+				9D54289449B29FD58CE51636 /* BridgeUtilitiesTests.swift */,
+				9D5D4FF932F3EF7D833A9081 /* CallsTests.swift */,
+				92CC939FCFDD3BACEE4F6A7A /* CallTests.swift */,
+				D1263746AB1876A4FFD9B4C9 /* ConfigurationTests.swift */,
+				C6C8EB01922F8745EF5FB69C /* ContactsTests.swift */,
+				5C08A3C94ACA141AFEBCFB71 /* DartToNativeContractTests.swift */,
+				FD358C2D82CBC4D94268E029 /* NativeIntegrationTests.swift */,
+				E201C1B8551D889E62C3978B /* NativeMiddlewareBridgerTests.swift */,
+				1E56B02460AC58F9CE1636DF /* NativeToDartContractTests.swift */,
+				FBDDC80C924B5B70F9B2A080 /* PhoneLibPluginTests.swift */,
+				1D06219E53699954C35B8179 /* PILTests.swift */,
+				CC7923144DBD1CDF73318275 /* TestSupport.swift */,
+				8C7ACB34D64D40D349B902BF /* VoIPLibTests.swift */,
+			);
+			name = RunnerTests;
+			path = RunnerTests;
+			sourceTree = "<group>";
+		};
+		C286429C701EA19E868F2E39 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2E0B162F8E7CBA51A599F022 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		7DFF5BECE75A16715D77A54F /* RunnerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 60562479D41ECEAB0BE98551 /* Build configuration list for PBXNativeTarget "RunnerTests" */;
+			buildPhases = (
+				AD46BC179EF7440DA0FFFB0D /* Sources */,
+				3FE421DF61865763A635D96E /* Frameworks */,
+				7197F2C47FAD68178C39E42A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1A7F97B94BBE4AC66ADE8B84 /* PBXTargetDependency */,
+			);
+			name = RunnerTests;
+			productName = RunnerTests;
+			productReference = A7EAB91B4AE08C854976A4DF /* RunnerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		97C146ED1CF9000F007C117D /* Runner */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
@@ -178,11 +283,19 @@
 			projectRoot = "";
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
+				7DFF5BECE75A16715D77A54F /* RunnerTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		7197F2C47FAD68178C39E42A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EC1CF9000F007C117D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -241,7 +354,36 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AD46BC179EF7440DA0FFFB0D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EFD07E61BA4AC158CA1ECFC4 /* BridgeUtilitiesTests.swift in Sources */,
+				DD397857C40DF77F9D7E0813 /* CallsTests.swift in Sources */,
+				FEB995EAC84DE061A77F26A0 /* CallTests.swift in Sources */,
+				0FBB4110B8EE80D8FC368668 /* ConfigurationTests.swift in Sources */,
+				65AD023DC5370147F7D5103C /* ContactsTests.swift in Sources */,
+				27C32EE9B79009D2B46C028B /* DartToNativeContractTests.swift in Sources */,
+				5D3EC4295E83AFEA60FCAF68 /* NativeIntegrationTests.swift in Sources */,
+				697C31CFD6845E9BCD5DC8C8 /* NativeMiddlewareBridgerTests.swift in Sources */,
+				57EA466E36D82C40B70C329B /* NativeToDartContractTests.swift in Sources */,
+				2ABAA8FB7A01659BBB5F3EE4 /* PhoneLibPluginTests.swift in Sources */,
+				0DE51F20AD512C3FD6BA5AFE /* PILTests.swift in Sources */,
+				6DED91715B39A0AA2062945B /* TestSupport.swift in Sources */,
+				39FA11CE7FCAB20A7AA0260B /* VoIPLibTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1A7F97B94BBE4AC66ADE8B84 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Runner;
+			target = 97C146ED1CF9000F007C117D /* Runner */;
+			targetProxy = FFE64CE1C3895A4DA5A78730 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		97C146FA1CF9000F007C117D /* Main.storyboard */ = {
@@ -322,6 +464,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = E2Q9UE8HM6;
 				ENABLE_BITCODE = NO;
@@ -329,7 +472,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -353,6 +495,23 @@
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Profile;
+		};
+		5C055077724AC46EF0142430 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.voipgrid.vialer.RunnerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
+			};
+			name = Debug;
 		};
 		97C147031CF9000F007C117D /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -474,6 +633,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = E2Q9UE8HM6;
 				ENABLE_BITCODE = NO;
@@ -481,7 +641,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -512,6 +671,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = E2Q9UE8HM6;
 				ENABLE_BITCODE = NO;
@@ -519,7 +679,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -544,9 +703,49 @@
 			};
 			name = Release;
 		};
+		AE42F64E3893D6C4AC84ABDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.voipgrid.vialer.RunnerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
+			};
+			name = Release;
+		};
+		FA617D969FD15CB0B0969EF6 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.voipgrid.vialer.RunnerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
+			};
+			name = Profile;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		60562479D41ECEAB0BE98551 /* Build configuration list for PBXNativeTarget "RunnerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AE42F64E3893D6C4AC84ABDB /* Release */,
+				5C055077724AC46EF0142430 /* Debug */,
+				FA617D969FD15CB0B0969EF6 /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		97C146E91CF9000F007C117D /* Build configuration list for PBXProject "Runner" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

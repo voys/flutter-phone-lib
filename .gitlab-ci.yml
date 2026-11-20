@@ -1,0 +1,59 @@
+workflow:
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# iOS tests (example/ios/RunnerTests) aren't run here: they need a macOS runner.
+
+.flutter:
+  # Keep in step with the Flutter version the lockfiles were resolved with.
+  image:
+    name: $CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX/gmeligio/flutter-android:3.50.0
+    docker:
+      # The checkout is owned by root, not the image's default user.
+      user: root
+  variables:
+    PUB_CACHE: $CI_PROJECT_DIR/.pub-cache
+  cache:
+    key: pub
+    paths:
+      - .pub-cache/
+  before_script:
+    - git config --global --add safe.directory "$FLUTTER_ROOT"
+  timeout: 1 hour
+
+dart:
+  extends: .flutter
+  script:
+    - tool/test.sh dart
+
+android:
+  extends: .flutter
+  variables:
+    GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradle-home
+  cache:
+    - key: pub
+      paths:
+        - .pub-cache/
+    - key: gradle
+      paths:
+        - .gradle-home/caches/
+        - .gradle-home/wrapper/
+  script:
+    # The example app's build refuses to configure without one, but the plugin's
+    # unit tests never use it.
+    - echo '{}' > example/android/app/google-services.json
+    # The project's 4G daemon plus a separate Kotlin daemon get the build killed
+    # for exceeding the container's memory; this overrides the project's settings.
+    - |
+      mkdir -p "$GRADLE_USER_HOME"
+      cat > "$GRADLE_USER_HOME/gradle.properties" <<EOF
+      org.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=768m
+      org.gradle.workers.max=2
+      kotlin.compiler.execution.strategy=in-process
+      EOF
+    - tool/test.sh android
+  artifacts:
+    when: always
+    reports:
+      junit: example/build/flutter_phone_lib/test-results/testDebugUnitTest/*.xml
