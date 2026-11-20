@@ -2,7 +2,7 @@
 # Runs the Dart, Android and iOS test suites, or only those named:
 #   tool/test.sh [dart] [android] [ios]
 #
-# Uses `flutter` from PATH; override with e.g. FLUTTER="fvm spawn 3.47.4".
+# Uses `flutter` from PATH; override with e.g. FLUTTER="fvm spawn 3.50.0".
 # The iOS suite runs on the simulator named by IOS_SIMULATOR (default "iPhone 17").
 #
 # Lockfiles are never rewritten: if they don't fit this Flutter version, it stops.
@@ -27,7 +27,7 @@ suites=("$@")
 if ! "${flutter[@]}" pub get --enforce-lockfile --no-example ||
   ! (cd example && "${flutter[@]}" pub get --enforce-lockfile); then
   echo "The lockfiles don't fit $("${flutter[@]}" --version | head -1)." >&2
-  echo "Use the version they were resolved with, e.g. FLUTTER=\"fvm spawn 3.47.4\" tool/test.sh" >&2
+  echo "Use the version they were resolved with, e.g. FLUTTER=\"fvm spawn 3.50.0\" tool/test.sh" >&2
   exit 1
 fi
 
