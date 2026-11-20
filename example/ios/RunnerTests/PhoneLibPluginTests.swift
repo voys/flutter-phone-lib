@@ -189,8 +189,7 @@ final class PhoneLibPluginTests: XCTestCase {
         XCTAssertEqual(ended.first?.mos, "0.0")
     }
 
-    // Bug: Android passes the call's reason on, iOS always sends "".
-    func testOnCallEndedDropsTheReason() {
+    func testOnCallEndedPassesTheReasonOn() {
         var ended: [NativeCall] = []
         PhoneLibPlugin.onCallEnded = { ended.append($0) }
         let state = CallSessionState(
@@ -198,11 +197,10 @@ final class PhoneLibPluginTests: XCTestCase {
             inactiveCall: nil,
             audioState: Fixtures.idleSessionState.audioState
         )
-        XCTAssertEqual(Fixtures.inactiveCall.reason, "Busy Here")
 
         CallListener().onEvent(event: .callEnded(state: state))
 
-        XCTAssertEqual(ended.first?.reason, "")
+        XCTAssertEqual(ended.first?.reason, "Busy Here")
     }
 }
 

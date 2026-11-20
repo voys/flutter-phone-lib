@@ -286,7 +286,7 @@ class CallListener : PILEventDelegate {
 
                 PhoneLibPlugin.onCallEnded?(NativeCall(
                      mos: String(call.mos),
-                     reason: "",
+                     reason: call.reason,
                      duration: String(call.duration),
                      direction: call.direction == .inbound ? "inbound" : "outbound"
                  ))
