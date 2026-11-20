@@ -13,7 +13,9 @@ class RemoteMessage {
   static RemoteMessage fromMap(Map map) {
     // Cast is not nested, so cast data too.
     final castMap = map.cast<String, dynamic>();
-    castMap['data'] = castMap['data']?.cast<String, dynamic>() ?? {};
+    castMap['data'] =
+        (castMap['data'] as Map?)?.cast<String, dynamic>() ??
+        <String, dynamic>{};
 
     return _$RemoteMessageFromJson(castMap);
   }

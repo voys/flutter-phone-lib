@@ -31,6 +31,7 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
     }
 
     defaultConfig {
@@ -44,6 +45,23 @@ android {
 
     lintOptions {
         disable 'InvalidPackage'
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            all {
+                // Shared with the Dart and iOS tests.
+                systemProperty 'contractDir', file('../test/contract').absolutePath
+                // Also at --quiet, which tool/test.sh uses to hide the build log.
+                testLogging {
+                    [lifecycle, quiet].each {
+                        it.events 'passed', 'skipped', 'failed'
+                        it.exceptionFormat 'full'
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -70,4 +88,8 @@ dependencies {
     implementation 'androidx.media:media:1.2.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
     implementation 'androidx.lifecycle:lifecycle-process:2.5.0'
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'io.mockk:mockk:1.13.13'
+    testImplementation 'org.robolectric:robolectric:4.14.1'
 }
