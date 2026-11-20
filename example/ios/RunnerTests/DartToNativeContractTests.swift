@@ -58,16 +58,10 @@ final class DartToNativeContractTests: XCTestCase {
         XCTAssertNil(authOf(nil as String?))
     }
 
-    // Bug: serialize() writes "useApplicationRingtone" but preferencesOf reads
-    // "useApplicationProvidedRingtone", so a native start always uses the
-    // default ringtone.
-    func testPersistedPreferencesLoseTheApplicationRingtone() {
+    func testPreferencesRoundTripThroughUserDefaults() {
         let preferences = Preferences(useApplicationRingtone: true, includesCallsInRecents: false)
 
-        XCTAssertEqual(
-            preferencesOf(preferences.serialize()),
-            Preferences(useApplicationRingtone: false, includesCallsInRecents: false)
-        )
+        XCTAssertEqual(preferencesOf(preferences.serialize()), preferences)
         XCTAssertNil(preferencesOf(nil as String?))
     }
 

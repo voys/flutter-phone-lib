@@ -19,7 +19,7 @@ internal func preferencesOf(_ json: String?) -> Preferences? {
 internal extension Preferences {
     func serialize() -> String {
         return serializeToJSON([
-            "useApplicationRingtone": useApplicationRingtone,
+            "useApplicationProvidedRingtone": useApplicationRingtone,
             "showCallsInNativeRecents": includesCallsInRecents,
         ])
     }

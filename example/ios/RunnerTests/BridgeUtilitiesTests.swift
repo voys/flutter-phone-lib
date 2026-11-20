@@ -40,12 +40,12 @@ final class BridgeUtilitiesTests: XCTestCase {
         )
     }
 
-    func testPreferencesArePersistedUnderTheirOwnKeys() {
+    func testPreferencesArePersistedUnderTheKeysDartSends() {
         let preferences = Preferences(useApplicationRingtone: true, includesCallsInRecents: false)
 
         XCTAssertSameValue(
             deserializeFromJSON(preferences.serialize()) as NSDictionary,
-            ["useApplicationRingtone": true, "showCallsInNativeRecents": false]
+            ["useApplicationProvidedRingtone": true, "showCallsInNativeRecents": false]
         )
     }
 
