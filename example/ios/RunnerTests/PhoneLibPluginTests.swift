@@ -140,7 +140,6 @@ final class PhoneLibPluginTests: XCTestCase {
         XCTAssertTrue(center.delegate is OnMissedCallNotificationPressedDelegate)
     }
 
-    // Bug: the completion handler is never called, which iOS requires.
     func testMissedCallNotificationPressesAreForwardedToDart() {
         PhoneLibPlugin.instance = nil
         let messenger = RecordingMessenger()
@@ -155,21 +154,23 @@ final class PhoneLibPluginTests: XCTestCase {
 
         XCTAssertEqual(messenger.sent.map(\.method), ["onMissedCallNotificationPressed"])
         XCTAssertNil(messenger.sent.first?.arguments)
-        XCTAssertFalse(completed)
+        XCTAssertTrue(completed)
     }
 
     func testOtherNotificationPressesAreIgnored() {
         PhoneLibPlugin.instance = nil
         let messenger = RecordingMessenger()
         _ = PhoneLibPlugin(messenger.channel())
+        var completed = false
 
         OnMissedCallNotificationPressedDelegate().userNotificationCenter(
             UNUserNotificationCenter.current(),
             didReceive: FakeNotificationResponse(identifier: "something-else"),
-            withCompletionHandler: {}
+            withCompletionHandler: { completed = true }
         )
 
         XCTAssertTrue(messenger.sent.isEmpty)
+        XCTAssertTrue(completed)
     }
 
     func testInboundCallsAreSummarisedAsInbound() {

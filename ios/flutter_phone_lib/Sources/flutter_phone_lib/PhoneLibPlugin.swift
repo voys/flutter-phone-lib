@@ -308,5 +308,7 @@ class OnMissedCallNotificationPressedDelegate : NSObject, UNUserNotificationCent
         if (response.notification.request.identifier == NotificationRequestIdentifiers.missedCalls.rawValue) {
             PhoneLibPlugin.instance!.channel.invokeMethod("onMissedCallNotificationPressed", arguments: nil)
         }
+
+        completionHandler()
     }
 }
