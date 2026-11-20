@@ -286,7 +286,7 @@ class CallListener : PILEventDelegate {
 
                 PhoneLibPlugin.onCallEnded?(NativeCall(
                      mos: String(call.mos),
-                     reason: "",
+                     reason: call.reason,
                      duration: String(call.duration),
                      direction: call.direction == .inbound ? "inbound" : "outbound"
                  ))
@@ -308,5 +308,7 @@ class OnMissedCallNotificationPressedDelegate : NSObject, UNUserNotificationCent
         if (response.notification.request.identifier == NotificationRequestIdentifiers.missedCalls.rawValue) {
             PhoneLibPlugin.instance!.channel.invokeMethod("onMissedCallNotificationPressed", arguments: nil)
         }
+
+        completionHandler()
     }
 }

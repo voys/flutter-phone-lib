@@ -1,0 +1,82 @@
+{
+  "sessionState": {
+    "activeCall": {
+      "remoteNumber": "+31501234567",
+      "displayName": "Alice",
+      "state": "CONNECTED",
+      "direction": "OUTBOUND",
+      "duration": 75,
+      "isOnHold": false,
+      "uuid": "C0FFEE00-0000-4000-8000-000000000001",
+      "mos": 4.5,
+      "currentMos": 4.25,
+      "contact": {
+        "name": "Alice Example",
+        "imageUri": null
+      },
+      "remotePartyHeading": "Alice Example",
+      "remotePartySubheading": "+31501234567",
+      "prettyDuration": "01:15",
+      "callId": "",
+      "reason": ""
+    },
+    "inactiveCall": {
+      "remoteNumber": "+31507654321",
+      "displayName": "",
+      "state": "HELD_BY_LOCAL",
+      "direction": "INBOUND",
+      "duration": 3725,
+      "isOnHold": true,
+      "uuid": "C0FFEE00-0000-4000-8000-000000000002",
+      "mos": 0.0,
+      "currentMos": 0.0,
+      "contact": null,
+      "remotePartyHeading": "+31507654321",
+      "remotePartySubheading": "",
+      "prettyDuration": "01:02:05",
+      "callId": "",
+      "reason": "Busy Here"
+    },
+    "audioState": {
+      "currentRoute": "BLUETOOTH",
+      "availableRoutes": ["SPEAKER", "PHONE", "BLUETOOTH"],
+      "bluetoothDeviceName": "Headset",
+      "isMicrophoneMuted": true,
+      "bluetoothRoutes": []
+    }
+  },
+  "idleSessionState": {
+    "activeCall": null,
+    "inactiveCall": null,
+    "audioState": {
+      "currentRoute": "PHONE",
+      "availableRoutes": ["SPEAKER", "PHONE"],
+      "bluetoothDeviceName": null,
+      "isMicrophoneMuted": false,
+      "bluetoothRoutes": []
+    }
+  },
+  "callSessionEventTypes": [
+    "OutgoingCallStarted",
+    "IncomingCallReceived",
+    "CallEnded",
+    "CallConnected",
+    "CallDurationUpdated",
+    "AudioStateUpdated",
+    "CallStateUpdated",
+    "AttendedTransferStarted",
+    "AttendedTransferAborted",
+    "AttendedTransferConnected",
+    "AttendedTransferEnded"
+  ],
+  "callSetupFailedEventTypes": [
+    "OutgoingCallSetupFailed",
+    "IncomingCallSetupFailed"
+  ],
+  "callSetupFailedReasons": [
+    "UNKNOWN",
+    "IN_CALL",
+    "UNABLE_TO_REGISTER",
+    "REJECTED_BY_CALL_KIT"
+  ]
+}

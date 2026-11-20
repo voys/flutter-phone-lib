@@ -1,0 +1,80 @@
+[
+  {
+    "method": "initializePhoneLib",
+    "arguments": [
+      {
+        "useApplicationProvidedRingtone": true,
+        "showCallsInNativeRecents": false,
+        "enableAdvancedLogging": true
+      },
+      {
+        "username": "contract-user",
+        "password": "contract-password",
+        "domain": "sip.example.com",
+        "port": 5061,
+        "secure": true
+      },
+      "Contract Test Agent"
+    ]
+  },
+  {
+    "method": "PhoneLib.start",
+    "arguments": [
+      {
+        "useApplicationProvidedRingtone": true,
+        "showCallsInNativeRecents": false,
+        "enableAdvancedLogging": true
+      },
+      {
+        "username": "contract-user",
+        "password": "contract-password",
+        "domain": "sip.example.com",
+        "port": 5061,
+        "secure": true
+      }
+    ]
+  },
+  { "method": "PhoneLib.unregister", "arguments": null },
+  { "method": "PhoneLib.stop", "arguments": null },
+  {
+    "method": "PhoneLib.updatePreferences",
+    "arguments": [
+      {
+        "useApplicationProvidedRingtone": false,
+        "showCallsInNativeRecents": true,
+        "enableAdvancedLogging": false
+      }
+    ]
+  },
+  { "method": "PhoneLib.call", "arguments": "+31501234567" },
+  { "method": "PhoneLib.linphoneVersion", "arguments": null },
+  { "method": "PhoneLib.sessionState", "arguments": null },
+  { "method": "PhoneLib.performEchoCancellationCalibration", "arguments": null },
+  { "method": "PhoneLib.playToneLocally", "arguments": "5" },
+  { "method": "Calls.active", "arguments": null },
+  { "method": "EventsManager.listen", "arguments": null },
+  { "method": "EventsManager.stopListening", "arguments": null },
+  { "method": "CallActions.hold", "arguments": null },
+  { "method": "CallActions.unhold", "arguments": null },
+  { "method": "CallActions.toggleHold", "arguments": null },
+  {
+    "method": "CallActions.sendDtmf",
+    "arguments": { "dtmf": "7", "playToneLocally": false }
+  },
+  { "method": "CallActions.beginAttendedTransfer", "arguments": "+31507654321" },
+  { "method": "CallActions.completeAttendedTransfer", "arguments": null },
+  { "method": "CallActions.answer", "arguments": null },
+  { "method": "CallActions.decline", "arguments": null },
+  { "method": "CallActions.end", "arguments": null },
+  { "method": "AudioManager.isMicrophoneMuted", "arguments": null },
+  { "method": "AudioManager.state", "arguments": null },
+  { "method": "AudioManager.routeAudio", "arguments": "SPEAKER" },
+  {
+    "method": "AudioManager.routeAudio",
+    "arguments": { "displayName": "Headset", "identifier": "00:11:22:33:44:55" }
+  },
+  { "method": "AudioManager.launchAudioRoutePicker", "arguments": null },
+  { "method": "AudioManager.mute", "arguments": null },
+  { "method": "AudioManager.unmute", "arguments": null },
+  { "method": "AudioManager.toggleMute", "arguments": null }
+]

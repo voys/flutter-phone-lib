@@ -1,4 +1,5 @@
 import '../phone_lib.dart';
+import '../util/cast_recursive.dart';
 import 'call.dart';
 
 class Calls {
@@ -6,7 +7,7 @@ class Calls {
       .invokeMethod('Calls.active')
       .then(
         (map) => map != null
-            ? Call.fromJson((map as Map).cast<String, dynamic>())
+            ? Call.fromJson((map as Map).castRecursively())
             : null,
       );
 }

@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.11] - 2026-11-20
+
+- On iOS, `onCallEnded` now passes the call's end reason (e.g. `Busy Here`), as Android already did. Before, it was always empty.
+- Fixed a bug on iOS where a call that started the app from a push always used the default ringtone, even when the app asked for its own.
+- Fixed a bug on iOS where a contact without a given or family name (e.g. only a company) showed as a blank name. The caller's display name and number now show instead.
+- Fixed a bug on iOS where the missed-call notification delegate never called its completion handler, which iOS requires.
+- Fixed `Calls.active` throwing when the call has a contact.
+- Fixed `RemoteMessage.fromMap` throwing when the message has no data.
+
 ## [1.0.10] - 2026-11-17
 
 - Call states are now the same on Android and iOS. An incoming call that hasn't been answered is `RINGING` on both; Android reported it as `INITIALIZING`. An outgoing call is `INITIALIZING` until the other side rings, then `RINGING`; iOS reported it as `RINGING` straight away. Apps that check for `INITIALIZING` to detect an unanswered incoming call must check for `RINGING` instead. Use `Call.direction` to tell incoming and outgoing calls apart.

@@ -66,8 +66,17 @@ flutter pub run build_runner watch
 ### Testing and Quality
 
 ```bash
-# Run tests (test/ directory currently empty)
+# All suites, or some of them: tool/test.sh [dart] [android] [ios]
+tool/test.sh
+
+# Dart tests
 flutter test
+
+# Android bridge tests (Robolectric)
+cd example/android && ./gradlew :flutter_phone_lib:testDebugUnitTest
+
+# iOS bridge tests (example/ios/RunnerTests); run `flutter build ios --config-only --simulator` in example/ first
+cd example/ios && xcodebuild test -workspace Runner.xcworkspace -scheme Runner -destination 'platform=iOS Simulator,name=iPhone 17'
 
 # Run code analysis
 flutter analyze
@@ -75,6 +84,8 @@ flutter analyze
 # Format code
 dart format lib/ android/ ios/
 ```
+
+`test/contract/*.json` is the method channel contract shared by all three suites: the Dart tests prove what Dart sends and how it decodes each platform's output, and the Android/iOS tests prove their bridge sends and accepts exactly that. Change a fixture and all three must agree.
 
 ### Running the Example App
 
