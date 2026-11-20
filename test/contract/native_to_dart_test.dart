@@ -67,13 +67,11 @@ void main() {
         expect(await phoneLib.calls.active, expected.inactiveCall);
       });
 
-      // Bug: Calls.active only casts the outer map, so the nested contact map
-      // fails Call.fromJson's cast. sessionState casts recursively and works.
-      test('Calls.active throws when the active call has a contact', () async {
+      test('Calls.active decodes an active call with a contact', () async {
         native.responses['Calls.active'] = (_) =>
             (contract['sessionState'] as Map)['activeCall'];
 
-        await expectLater(phoneLib.calls.active, throwsA(isA<TypeError>()));
+        expect(await phoneLib.calls.active, expected.activeCall);
       });
 
       test('AudioManager.state decodes the audio state', () async {
