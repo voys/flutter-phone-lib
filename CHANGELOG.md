@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.12] - Unreleased
+
+- The SIP password is no longer kept in plain text. It was stored that way to be able to start natively, before Flutter runs, and is now kept in the iOS Keychain and with the Android Keystore through [shared_secure_storage](https://pub.dev/packages/shared_secure_storage). A password stored by an earlier version is moved the first time the app starts.
+- On iOS, `stop()` now removes the stored SIP account, as Android already did. Before, the phone lib would still start natively with the previous account after the app had stopped it, for example on logout.
+
 ## [1.0.11] - 2026-11-20
 
 - On iOS, `onCallEnded` now passes the call's end reason (e.g. `Busy Here`), as Android already did. Before, it was always empty.

@@ -52,7 +52,7 @@ public class PhoneLibPlugin: NSObject, FlutterPlugin {
 
                     let defaults = UserDefaults.standard
                     defaults.set(preferences.serialize(), forKey: Keys.PREFERENCES)
-                    defaults.set(auth.serialize(), forKey: Keys.AUTH)
+                    PhoneLibPlugin.authStore.save(auth)
                     defaults.set(userAgent, forKey: Keys.USER_AGENT)
 
                     PhoneLibPlugin.appDelegate!.startPhoneLib()
@@ -73,6 +73,7 @@ public class PhoneLibPlugin: NSObject, FlutterPlugin {
                             result(nil)
                         }
                         case "stop": withSuccess(result) {
+                            PhoneLibPlugin.authStore.clear()
                             pil.stop()
                         }
                         case "updatePreferences": withSuccess(result) {
@@ -169,6 +170,7 @@ public class PhoneLibPlugin: NSObject, FlutterPlugin {
     internal static var nativeMiddleware: NativeMiddleware?
     internal static var onCallEnded: OnCallEndedCallback?
     internal static var callListener: PILEventDelegate?
+    internal static var authStore = AuthStore()
 
     internal class Keys {
         static let SHARED_PREFERENCES = "FlutterPhoneLib"
@@ -230,7 +232,7 @@ extension UIApplicationDelegate {
         
         let defaults = UserDefaults.standard
         let preferences = preferencesOf(defaults.string(forKey: PhoneLibPlugin.Keys.PREFERENCES))
-        let auth = authOf(defaults.string(forKey: PhoneLibPlugin.Keys.AUTH))
+        let auth = PhoneLibPlugin.authStore.load()
         let userAgent = defaults.string(forKey: PhoneLibPlugin.Keys.USER_AGENT)
                 
         if (preferences == nil || auth == nil || userAgent == nil) {

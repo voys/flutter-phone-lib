@@ -25,6 +25,7 @@ import org.openvoipalliance.androidphoneintegration.logging.LogLevel
 import org.openvoipalliance.androidphoneintegration.mockLinphoneFactory
 import org.openvoipalliance.androidphoneintegration.push.UnavailableReason
 import org.openvoipalliance.androidphoneintegration.restoreLinphoneFactory
+import org.openvoipalliance.flutterphonelib.configuration.SecurePasswordStore
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
@@ -45,10 +46,12 @@ class StartPhoneLibTest {
     private val logs = mutableListOf<Pair<String, PhoneLibLogLevel>>()
     private val endedCalls = mutableListOf<NativeCall>()
     private val nativeMiddleware = mockk<NativeMiddleware>(relaxed = true)
+    private val passwords = FakePasswordStore()
 
     @Before
     fun setUp() {
         resetPhoneLib()
+        PhoneLib.passwordStoreOf = { passwords }
         allowRealPilModuleToLoad()
         mockLinphoneFactory()
     }
@@ -58,6 +61,7 @@ class StartPhoneLibTest {
         resetPhoneLib()
         clearPilInstance()
         restoreLinphoneFactory()
+        PhoneLib.passwordStoreOf = ::SecurePasswordStore
         application.sharedPreferences.edit().clear().commit()
     }
 
@@ -100,6 +104,42 @@ class StartPhoneLibTest {
         assertEquals("Test Agent", pil.app.userAgent)
         assertEquals(MainActivity::class.java, pil.app.activities.call)
         assertEquals(IncomingCallActivity::class.java, pil.app.activities.incomingCall)
+    }
+
+    @Test
+    fun `the PIL starts with the password from secure storage`() {
+        persist()
+        application.authStore.save(auth)
+
+        start()
+
+        assertEquals(auth, PhoneLib.pil.auth)
+        assertEquals("password", passwords.password)
+    }
+
+    @Test
+    fun `a password persisted by an older version is moved to secure storage`() {
+        persist()
+
+        start()
+
+        assertEquals(auth, PhoneLib.pil.auth)
+        assertEquals("password", passwords.password)
+        assertEquals(
+            auth.copy(password = ""),
+            Gson().fromJson(application.sharedPreferences.getString(PhoneLib.Keys.AUTH, null), Auth::class.java),
+        )
+    }
+
+    @Test
+    fun `nothing starts when the password is gone from secure storage`() {
+        persist()
+        application.authStore.save(auth)
+        passwords.password = null
+
+        start()
+
+        assertFalse(PhoneLib.isPILInitialized)
     }
 
     @Test

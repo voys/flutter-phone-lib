@@ -34,6 +34,9 @@ import org.openvoipalliance.androidphoneintegration.push.UnavailableReason
 import org.openvoipalliance.androidphoneintegration.startAndroidPIL
 import org.openvoipalliance.flutterphonelib.audio.toMap
 import org.openvoipalliance.flutterphonelib.call.toMap
+import org.openvoipalliance.flutterphonelib.configuration.AuthStore
+import org.openvoipalliance.flutterphonelib.configuration.PasswordStore
+import org.openvoipalliance.flutterphonelib.configuration.SecurePasswordStore
 import org.openvoipalliance.flutterphonelib.configuration.authOf
 import org.openvoipalliance.flutterphonelib.configuration.preferencesOf
 import org.openvoipalliance.flutterphonelib.events.ProxyEventListener
@@ -123,6 +126,7 @@ class PhoneLib : FlutterPlugin, MethodCallHandler, ActivityAware {
                         }
                         "unregister" -> pil.unregister { result.success(null) }
                         "stop" -> result.withSuccess {
+                            context.authStore.clear()
                             context.sharedPreferences.edit().clear().apply()
                             pil.stop()
                         }
@@ -238,11 +242,14 @@ class PhoneLib : FlutterPlugin, MethodCallHandler, ActivityAware {
         auth: Auth? = null,
         preferences: Preferences? = null,
         userAgent: String? = null
-    ) = context.sharedPreferences.edit().apply {
-        auth?.let { putString(Keys.AUTH, Gson().toJson(it)) }
-        preferences?.let { putString(Keys.PREFERENCES, Gson().toJson(it)) }
-        userAgent?.let { putString(Keys.USER_AGENT, it) }
-        apply()
+    ) {
+        auth?.let { context.authStore.save(it) }
+
+        context.sharedPreferences.edit().apply {
+            preferences?.let { putString(Keys.PREFERENCES, Gson().toJson(it)) }
+            userAgent?.let { putString(Keys.USER_AGENT, it) }
+            apply()
+        }
     }
 
     /**
@@ -263,6 +270,7 @@ class PhoneLib : FlutterPlugin, MethodCallHandler, ActivityAware {
         internal var nativeMiddleware: NativeMiddleware? = null
         internal var onCallEnded: OnCallEndedCallback? = null
         internal var callListener: PILEventListener? = null
+        internal var passwordStoreOf: (Context) -> PasswordStore = ::SecurePasswordStore
 
         // Can't access isInitialized outside of the companion object, so we have to define this
         // getter.
@@ -281,7 +289,7 @@ class PhoneLib : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     internal object Keys {
         const val SHARED_PREFERENCES = "FlutterPhoneLib"
-        const val AUTH = "auth"
+        const val AUTH = AuthStore.KEY
         const val PREFERENCES = "preferences"
         const val USER_AGENT = "userAgent"
     }
@@ -338,10 +346,7 @@ fun Application.startPhoneLib(
         prefs.getString(PhoneLib.Keys.PREFERENCES, null),
         Preferences::class.java
     )
-    val auth = Gson().fromJson(
-        prefs.getString(PhoneLib.Keys.AUTH, null),
-        Auth::class.java
-    )
+    val auth = authStore.load()
 
     val userAgent = prefs.getString(PhoneLib.Keys.USER_AGENT, null)
 
@@ -403,6 +408,9 @@ fun Application.startPhoneLib(
 
 internal val Context.sharedPreferences
     get() = getSharedPreferences(PhoneLib.Keys.SHARED_PREFERENCES, Context.MODE_PRIVATE)
+
+internal val Context.authStore
+    get() = AuthStore(sharedPreferences, PhoneLib.passwordStoreOf(this))
 
 enum class PhoneLibLogLevel {
     DEBUG, INFO, WARNING, ERROR

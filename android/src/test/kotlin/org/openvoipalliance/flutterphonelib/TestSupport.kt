@@ -1,5 +1,6 @@
 package org.openvoipalliance.flutterphonelib
 
+import org.openvoipalliance.flutterphonelib.configuration.PasswordStore
 import android.net.Uri
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
@@ -165,5 +166,24 @@ class RecordingResult : MethodChannel.Result {
 
     override fun notImplemented() {
         replies += Outcome.NotImplemented
+    }
+}
+
+class FakePasswordStore(var password: String? = null) : PasswordStore {
+    var failure: Exception? = null
+
+    override fun read(): String? {
+        failure?.let { throw it }
+        return password
+    }
+
+    override fun write(password: String) {
+        failure?.let { throw it }
+        this.password = password
+    }
+
+    override fun delete() {
+        failure?.let { throw it }
+        password = null
     }
 }

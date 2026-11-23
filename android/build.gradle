@@ -78,6 +78,7 @@ dependencies {
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
     implementation 'com.google.code.gson:gson:2.8.9'
+    implementation project(':shared_secure_storage')
 
     // Dependencies of the vendored Android Phone Integration Lib (formerly
     // com.github.open-voip-alliance:Android-Phone-Integration-Lib).

@@ -9,6 +9,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -25,6 +26,7 @@ import org.openvoipalliance.androidphoneintegration.configuration.Preferences
 import org.openvoipalliance.androidphoneintegration.debug.VersionInfo
 import org.openvoipalliance.androidphoneintegration.events.EventsManager
 import org.openvoipalliance.androidphoneintegration.events.PILEventListener
+import org.openvoipalliance.flutterphonelib.configuration.SecurePasswordStore
 import org.openvoipalliance.flutterphonelib.events.ProxyEventListener
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
@@ -45,6 +47,7 @@ class DartToNativeContractTest {
     private val pil = mockk<PIL>(relaxed = true)
     private val messenger = RecordingMessenger()
     private val plugin = PhoneLib()
+    private val passwords = FakePasswordStore()
 
     private val contractAuth = Auth("contract-user", "contract-password", "sip.example.com", 5061, true)
 
@@ -70,6 +73,7 @@ class DartToNativeContractTest {
 
         PhoneLib.pil = pil
         PhoneLib.app = application
+        PhoneLib.passwordStoreOf = { passwords }
         PhoneLib.activityClass = Activity::class.java
 
         plugin.onAttachedToEngine(mockk<FlutterPlugin.FlutterPluginBinding> {
@@ -81,6 +85,7 @@ class DartToNativeContractTest {
 
     @After
     fun tearDown() {
+        PhoneLib.passwordStoreOf = ::SecurePasswordStore
         plugin.onDetachedFromEngine(mockk(relaxed = true))
         application.sharedPreferences.edit().clear().commit()
         PhoneLib.app = null
@@ -108,7 +113,9 @@ class DartToNativeContractTest {
         invoke(contractCall("initializePhoneLib"))
 
         val prefs = application.sharedPreferences
-        assertEquals(contractAuth, Gson().fromJson(prefs.getString("auth", null), Auth::class.java))
+        assertEquals(contractAuth, application.authStore.load())
+        assertEquals("contract-password", passwords.password)
+        assertFalse(prefs.getString("auth", null)!!.contains("contract-password"))
         assertEquals(
             Preferences(useApplicationProvidedRingtone = true, enableAdvancedLogging = true),
             Gson().fromJson(prefs.getString("preferences", null), Preferences::class.java),
@@ -125,10 +132,7 @@ class DartToNativeContractTest {
             pil.auth = contractAuth
             pil.start()
         }
-        assertEquals(
-            contractAuth,
-            Gson().fromJson(application.sharedPreferences.getString("auth", null), Auth::class.java),
-        )
+        assertEquals(contractAuth, application.authStore.load())
     }
 
     @Test
@@ -137,6 +141,7 @@ class DartToNativeContractTest {
         invoke(contractCall("PhoneLib.stop"))
 
         assertTrue(application.sharedPreferences.all.isEmpty())
+        assertNull(passwords.password)
         verify { pil.stop() }
     }
 
