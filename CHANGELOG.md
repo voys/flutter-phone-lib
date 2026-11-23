@@ -1,6 +1,10 @@
 # Changelog
 
-## [1.0.12] - Unreleased
+## [1.0.13] - 2026-11-23
+
+- On iOS, `start` now stores the SIP account, as Android already did. Since 1.0.12 `stop` removes it, so an app that called `stop` and then `start` without `initializePhoneLib` was left without an account, and an incoming call could not start the phone lib until Flutter had run.
+
+## [1.0.12] - 2026-11-23
 
 - The SIP password is no longer kept in plain text. It was stored that way to be able to start natively, before Flutter runs, and is now kept in the iOS Keychain and with the Android Keystore through [shared_secure_storage](https://pub.dev/packages/shared_secure_storage). A password stored by an earlier version is moved the first time the app starts.
 - On iOS, `stop()` now removes the stored SIP account, as Android already did. Before, the phone lib would still start natively with the previous account after the app had stopped it, for example on logout.

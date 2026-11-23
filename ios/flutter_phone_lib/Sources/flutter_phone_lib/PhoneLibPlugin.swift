@@ -65,8 +65,10 @@ public class PhoneLibPlugin: NSObject, FlutterPlugin {
                         }
                         case "start": withSuccess(result) {
                             let arguments = call.arguments as! Array<Any>
+                            let auth = authOf(arguments[1] as! Dictionary<String, Any?>)
                             pil.preferences = preferencesOf(arguments[0] as! Dictionary<String, Any?>)
-                            pil.auth = authOf(arguments[1] as! Dictionary<String, Any?>)
+                            pil.auth = auth
+                            PhoneLibPlugin.authStore.save(auth)
                             pil.start(forceInitialize: false, forceReregister: true)
                         }
                         case "unregister": pil.unregister {
