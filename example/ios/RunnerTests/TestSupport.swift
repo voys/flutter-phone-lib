@@ -44,7 +44,8 @@ enum Fixtures {
         mos: 4.5,
         currentMos: 4.25,
         contact: Contact("Alice Example"),
-        reason: ""
+        reason: "",
+        callId: "call-id-1"
     )
 
     static let inactiveCall = Call(
@@ -58,7 +59,8 @@ enum Fixtures {
         mos: 0,
         currentMos: 0,
         contact: nil,
-        reason: "Busy Here"
+        reason: "Busy Here",
+        callId: "call-id-2"
     )
 
     static var sessionState: CallSessionState {

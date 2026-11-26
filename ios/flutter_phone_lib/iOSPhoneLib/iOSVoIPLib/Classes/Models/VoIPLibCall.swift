@@ -77,6 +77,10 @@ public class VoIPLibCall:NSObject {
     public var reason: String {
         return String.init(describing: linphoneCall.reason)
     }
+
+    public var sipCallId: String {
+        linphoneCall.callLog?.callId ?? ""
+    }
     
     public var wasMissed: Bool {
         guard let log = linphoneCall.callLog else {

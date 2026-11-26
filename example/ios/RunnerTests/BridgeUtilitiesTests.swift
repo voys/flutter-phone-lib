@@ -49,8 +49,8 @@ final class BridgeUtilitiesTests: XCTestCase {
         )
     }
 
-    func testCallsAreSentWithoutACallId() {
-        XCTAssertEqual(Fixtures.activeCall.toDictionary()["callId"] as? String, "")
+    func testCallsAreSentWithTheirCallId() {
+        XCTAssertEqual(Fixtures.activeCall.toDictionary()["callId"] as? String, "call-id-1")
     }
 
     func testAudioStateIsSentWithoutBluetoothRoutes() {

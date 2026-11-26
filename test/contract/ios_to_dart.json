@@ -17,7 +17,7 @@
       "remotePartyHeading": "Alice Example",
       "remotePartySubheading": "+31501234567",
       "prettyDuration": "01:15",
-      "callId": "",
+      "callId": "call-id-1",
       "reason": ""
     },
     "inactiveCall": {
@@ -34,7 +34,7 @@
       "remotePartyHeading": "+31507654321",
       "remotePartySubheading": "",
       "prettyDuration": "01:02:05",
-      "callId": "",
+      "callId": "call-id-2",
       "reason": "Busy Here"
     },
     "audioState": {

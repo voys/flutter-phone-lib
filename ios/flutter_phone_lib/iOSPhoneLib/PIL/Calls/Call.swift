@@ -16,6 +16,7 @@ public struct Call {
     public let currentMos: Float
     public let contact: Contact?
     public let reason: String
+    public let callId: String
     
     public var remotePartyHeading: String {
         get {

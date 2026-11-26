@@ -191,7 +191,7 @@ CallSessionState _expectedSessionState(String platform) {
       remotePartyHeading: 'Alice Example',
       remotePartySubheading: '+31501234567',
       prettyDuration: '01:15',
-      callId: isAndroid ? 'call-id-1' : '',
+      callId: 'call-id-1',
       reason: '',
     ),
     inactiveCall: Call(
@@ -207,7 +207,7 @@ CallSessionState _expectedSessionState(String platform) {
       remotePartyHeading: '+31507654321',
       remotePartySubheading: '',
       prettyDuration: isAndroid ? '1:02:05' : '01:02:05',
-      callId: isAndroid ? 'call-id-2' : '',
+      callId: 'call-id-2',
       reason: 'Busy Here',
     ),
     audioState: AudioState(
