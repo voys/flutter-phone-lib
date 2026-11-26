@@ -14,7 +14,8 @@ final class CallTests: XCTestCase {
             mos: 0,
             currentMos: 0,
             contact: contact,
-            reason: ""
+            reason: "",
+            callId: ""
         )
     }
 

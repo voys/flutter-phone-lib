@@ -30,7 +30,8 @@ public class PILCallFactory {
             mos: libraryCall.quality.average,
             currentMos: libraryCall.quality.current,
             contact: contacts.find(call: libraryCall),
-            reason: libraryCall.reason
+            reason: libraryCall.reason,
+            callId: libraryCall.sipCallId
         )
     }
     

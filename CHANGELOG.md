@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.14] - 2026-11-26
+
+- On iOS, `Call.callId` is now the call's SIP Call-ID, as Android already did. Before, it was always empty.
+
 ## [1.0.11] - 2026-11-20
 
 - On iOS, `onCallEnded` now passes the call's end reason (e.g. `Busy Here`), as Android already did. Before, it was always empty.
